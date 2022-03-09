@@ -1,58 +1,48 @@
-﻿namespace Backlog.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
+
+namespace Backlog.Models
 {
+    [Table("user")]
+    [Index(nameof(Email), IsUnique = true)]
     public class User
     {
+        [Column("id")]
         public long Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public DateOnly BithDate { get; set; }
-        public int Age { get; set; }
-        public string CpfOrCnpj { get; set; } = string.Empty;
+        [Column("full_name")]
+        [StringLength(50)]
+        public string FullName { get; set; } = string.Empty;
+        [Column("cpf")]
+        [StringLength(11)]
+        public string Cpf { get; set; } = string.Empty;
+        [Column("password")]
+        [StringLength(50)]
         public string Password { get; set; } = string.Empty;
+        [Column("email")]
+        [StringLength(100)]
         public string Email { get; set; } = string.Empty;
+        [Column("address")]
+        [StringLength(100)]
+        public string Address { get; set; } = string.Empty;
+        [Column("backup_email")]
+        [StringLength(100)]
         public string BackupEmail { get; set; } = string.Empty;
+        public List<Ticket> Ticket { get; set; }
+        
         public User()
         {
         
         }
-        public User(string name, DateTime createdDate, DateOnly bithDate, int age, string cpfOrCnpj, string password, string email, string backupEmail)
+
+        public User(string fullName, string cpf, string password, string email, string address, string backupEmail, List<Ticket> ticket)
         {
-            Name = name;
-            CreatedDate = createdDate;
-            BithDate = bithDate;
-            Age = age;
-            CpfOrCnpj = cpfOrCnpj;
+            FullName = fullName;
+            Cpf = cpf;
             Password = password;
             Email = email;
+            Address = address;
             BackupEmail = backupEmail;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is User user &&
-                Id == user.Id &&
-                Name == user.Name &&
-                CreatedDate == user.CreatedDate &&
-                BithDate == user.BithDate &&
-                Age == user.Age &&
-                CpfOrCnpj == user.CpfOrCnpj &&
-                Password == user.Password &&
-                Email == user.Email &&
-                BackupEmail == user.BackupEmail;
-        }
-        public override int GetHashCode()
-        {
-            HashCode hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(Name);
-            hash.Add(CreatedDate);
-            hash.Add(BithDate);
-            hash.Add(Age);
-            hash.Add(CpfOrCnpj);
-            hash.Add(Password);
-            hash.Add(Email);
-            hash.Add(BackupEmail);
-            return hash.ToHashCode();
+            Ticket = ticket;
         }
     }
 }

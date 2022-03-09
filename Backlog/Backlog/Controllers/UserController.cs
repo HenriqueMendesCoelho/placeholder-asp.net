@@ -1,5 +1,4 @@
-﻿using Backlog.Methods;
-using Backlog.DTOs;
+﻿using Backlog.DTOs;
 
 namespace Backlog.Controllers
 {
@@ -7,50 +6,36 @@ namespace Backlog.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DataContext context;
+        private readonly ILogger<UserController> _logger;
+        private IUserService _userService;
 
-        public UserController(DataContext context)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
-            this.context = context;
+            _logger = logger;
+            _userService = userService;
         }
 
-        [HttpGet("{id}/v1")]
-        public async Task<ActionResult<User>> SearchUser(long id)
+        [HttpGet("/v1/{id}")]
+        public ActionResult<User?> SearchUser(long id)
         {
-            var user = await context.Users.FindAsync(id);
-            if (user == null)
-                BadRequest(new JsonReturnStandard().SingleReturnJsonError("User not found"));
+            var user = _userService.FindByID(id);
+
+            if(user == null) return NotFound("User not found");
             return Ok(user);
         }
 
-        [DisableCors]
-        [Route("v1")]
-        [HttpPost]
-        public object CreateUser(CreateUserDTO obj)
+        [HttpPost("v1")]
+        public ActionResult<User?> CreateUser(UserDTO obj)
         {
-            User u = new User
-            {
-                Name = obj.Name,
-                Email = obj.Email,
-                Password = obj.Password,
-                CpfOrCnpj = obj.CpfOrCnpj,
-                BackupEmail = obj.BackupEmail,
-                CreatedDate = DateTime.Now,
-                BithDate = obj.BithDate,
-                Age = obj.Age
-            };
-            try
-            {
-                context.Users.Add(u);
-                context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return Conflict("Error");
-            }
+            return Ok(_userService.Create(obj));
+        }
 
-            return Ok(new JsonReturnStandard().SingleReturnJson("User created"));
+        [HttpPut("v1")]
+        public ActionResult<User?> Update(User user)
+        {
+            if(user == null) return BadRequest("User can not be null");
+
+            return _userService.Update(user);
         }
     }
 }
