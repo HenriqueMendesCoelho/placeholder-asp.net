@@ -1,4 +1,4 @@
-﻿namespace Backlog.Methods
+﻿namespace PlaceHolder.Methods
 {
     public class JsonReturnStandard
     {
