@@ -1,4 +1,5 @@
 ﻿using PlaceHolder.DTOs;
+using PlaceHolder.Methods;
 
 namespace PlaceHolder.Controllers
 {
@@ -27,7 +28,17 @@ namespace PlaceHolder.Controllers
         [HttpPost("v1")]
         public ActionResult<User?> CreateUser(UserDTO obj)
         {
-            return Ok(_userService.Create(obj));
+            try
+            {
+                _userService.Create(obj);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(new JsonReturnStandard().SingleReturnJsonError(e.Message));
+            }
+
+            return Ok(obj);
         }
 
         [HttpPut("v1")]

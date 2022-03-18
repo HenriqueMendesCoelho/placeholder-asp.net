@@ -13,13 +13,14 @@ namespace PlaceHolder.Services
 
         public User Create(UserDTO obj)
         {
-            if (obj == null) 
-                throw new BadHttpRequestException(string.Format("User can not be null or empty"));
+            //if(!CpfValidation(obj.Cpf)) 
+            //    throw new BadHttpRequestException(string.Format("CPF not valid"));
 
+            //Converting DTO to a User
             User user = ConvertToUser(obj);
 
-            if (_repository.FindByEmail(user.Email) != null) 
-                throw new BadHttpRequestException(string.Format("E-mail is already used"));
+            if (_repository.FindByEmail(user.Email) != null) Console.WriteLine("Email duplicado");
+                //throw new Exception(string.Format("E-mail is already used"));
 
             _repository.Create(user);
             return user;
@@ -28,12 +29,12 @@ namespace PlaceHolder.Services
         public void Delete(string email)
         {
             if(email == null)
-                throw new BadHttpRequestException(string.Format("E-mail can not be null or empty"));
+                throw new Exception(string.Format("E-mail can not be null or empty"));
 
             var user = _repository.FindByEmail(email);
 
             if (user == null)
-                throw new BadHttpRequestException(string.Format("User can not be found"));
+                throw new Exception(string.Format("User can not be found"));
 
             _repository.Delete(user.Id);
         }
@@ -70,5 +71,7 @@ namespace PlaceHolder.Services
             };
             return u;
         }
+
+    
     }
 }

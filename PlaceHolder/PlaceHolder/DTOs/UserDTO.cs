@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PlaceHolder.Validation_Attributes;
 
 namespace PlaceHolder.DTOs
 {
@@ -9,6 +9,8 @@ namespace PlaceHolder.DTOs
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "CPF is required")]
+        [RegularExpression("[0-9]{11}", ErrorMessage = "CPF format not valid")]
+        [CpfValidation(ErrorMessage ="CPF not valid")]
         public string Cpf { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
@@ -17,6 +19,7 @@ namespace PlaceHolder.DTOs
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
+        [EmailUnique(ErrorMessage ="E-mail already used")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "BackupEmail is required")]
