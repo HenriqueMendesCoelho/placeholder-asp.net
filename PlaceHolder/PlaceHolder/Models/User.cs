@@ -1,4 +1,4 @@
-﻿using PlaceHolder.Validation_Attributes;
+﻿using PlaceHolder.Models.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 using IndexAttribute = Microsoft.EntityFrameworkCore.IndexAttribute;
 
@@ -6,10 +6,8 @@ namespace PlaceHolder.Models
 {
     [Table("user")]
     [Index(nameof(Cpf), IsUnique = true)]
-    public class User
+    public class User : BaseEntity
     {
-        [Column("id")]
-        public long Id { get; set; }
         [Column("full_name")]
         [StringLength(50)]
         public string FullName { get; set; }

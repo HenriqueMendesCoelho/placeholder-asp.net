@@ -7,7 +7,7 @@
             if (validationContext == null) return null;
             if(value == null) return null;
 
-            var repo = (IUserRepository)validationContext.GetService(typeof(IUserRepository));
+            var repo = (IRepository)validationContext.GetService(typeof(IRepository));
             if(repo == null) return null;
             
             if (repo.FindByEmail(value.ToString()) != null) return new ValidationResult("Email already used");

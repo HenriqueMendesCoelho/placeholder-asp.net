@@ -28,15 +28,7 @@ namespace PlaceHolder.Controllers
         [HttpPost("v1")]
         public ActionResult<User?> CreateUser(UserDTO obj)
         {
-            try
-            {
-                _userService.Create(obj);
-            }
-            catch (Exception e)
-            {
-
-                return BadRequest(new JsonReturnStandard().SingleReturnJsonError(e.Message));
-            }
+            _userService.Create(obj);
 
             return Ok(obj);
         }

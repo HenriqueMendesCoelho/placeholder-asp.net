@@ -14,7 +14,7 @@ namespace PlaceHolder.Repositories.Implamentations
 
         List<Ticket> FindAll();
 
-        Boolean IsExist(Ticket ticket);
+        Boolean Exists(Ticket ticket);
 
         List<Ticket> FindAllByUserEmail(string email);
     }

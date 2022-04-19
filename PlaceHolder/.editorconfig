@@ -20,10 +20,10 @@ csharp_style_prefer_null_check_over_type_check = true:suggestion
 csharp_space_around_binary_operators = before_and_after
 
 # CS8600: Converting null literal or possible null value to non-nullable type.
-dotnet_diagnostic.CS8600.severity = silent
+dotnet_diagnostic.CS8600.severity = suggestion
 
 # CS8604: Possible null reference argument.
-dotnet_diagnostic.CS8604.severity = warning
+dotnet_diagnostic.CS8604.severity = suggestion
 
 [*.{cs,vb}]
 #### Naming styles ####

@@ -8,6 +8,7 @@ global using PlaceHolder.Repositories.Implamentations;
 global using PlaceHolder.Repositories;
 global using System.Text.Json.Serialization;
 global using System.ComponentModel.DataAnnotations;
+using PlaceHolder.Repositories.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 //Dependency Injection
 builder.Services.AddScoped<IUserService, UserServiceImplementation>();
 builder.Services.AddScoped<IUserRepository, UserRepositoryImplementation>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ITicketRepository, TicketRepositoryImplementation>();
 builder.Services.AddScoped<ITicketService, TicketServiceImplementation>();
 

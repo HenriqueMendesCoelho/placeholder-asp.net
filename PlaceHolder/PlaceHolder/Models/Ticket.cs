@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using PlaceHolder.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
     [Table("ticket")]
-    public class Ticket
+    public class Ticket : BaseEntity
     {
-        public long Id { get; set; }
         public string Description { get; set; }
         [StringLength(30)]
         public string Category { get; set; }
@@ -22,7 +22,7 @@ namespace PlaceHolder.Models
         [JsonIgnore]
         public User User { get; set; }
         public long UserId { get; set; }
-        public List<Historic> Historics { get; set; }
+        public List<Historic> Historical { get; set; }
 
         public Ticket()
         {
@@ -30,7 +30,7 @@ namespace PlaceHolder.Models
         }
         public Ticket(string description, string category, 
             string subCategory, string status, string responsible, 
-            string employee, string title, User user, long userId, List<Historic> historics)
+            string employee, string title, User user, long userId, List<Historic> historical)
         {
             Description = description;
             Category = category;
@@ -41,7 +41,7 @@ namespace PlaceHolder.Models
             Title = title;
             User = user;
             UserId = userId;
-            Historics = historics;
+            Historical = historical;
         }
     }
 }

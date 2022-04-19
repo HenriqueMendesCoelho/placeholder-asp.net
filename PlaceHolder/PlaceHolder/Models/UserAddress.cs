@@ -1,12 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using PlaceHolder.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
     [Table("user_address")]
-    public class UserAddress
+    public class UserAddress : BaseEntity
     {
         [ForeignKey("User")]
-        public long UserAddressId { get; set; }
+        [Column("user_id")]
+        override
+        public long Id { get; set; }
         [StringLength(50)]
         public string Street { get; set; }
         [StringLength(20)]

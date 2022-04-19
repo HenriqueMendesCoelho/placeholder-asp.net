@@ -13,14 +13,8 @@ namespace PlaceHolder.Services
 
         public User Create(UserDTO obj)
         {
-            //if(!CpfValidation(obj.Cpf)) 
-            //    throw new BadHttpRequestException(string.Format("CPF not valid"));
-
             //Converting DTO to a User
             User user = ConvertToUser(obj);
-
-            if (_repository.FindByEmail(user.Email) != null) Console.WriteLine("Email duplicado");
-                //throw new Exception(string.Format("E-mail is already used"));
 
             _repository.Create(user);
             return user;

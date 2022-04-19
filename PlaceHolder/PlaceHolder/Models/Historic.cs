@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using PlaceHolder.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
     [Table("historic")]
-    public class Historic
+    public class Historic : BaseEntity
     {
-        public long Id { get; set; }
+
         [StringLength(50)]
         public string text { get; set; }
+
         [JsonIgnore]
         public Ticket Ticket { get; set; }
         public long TicketId { get; set; }

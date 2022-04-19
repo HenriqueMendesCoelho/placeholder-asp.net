@@ -2,20 +2,11 @@
 
 namespace PlaceHolder.Repositories.Implamentations
 {
-    public interface IUserRepository
+    public interface IUserRepository 
     {
-        User? Create(User user);
+        User? FindByEmailWithInclude(string email);
 
-        User? Update(User user);
+        User? FindByIdWithInclude(long id);
 
-        void Delete(long id);
-
-        User? FindByID(long id);
-
-        User? FindByEmail(string email);
-
-        List<User> FindAll();
-
-        Boolean IsExist(User user);
     }
 }
