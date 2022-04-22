@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
-    [Table("user_address")]
+    [Table("users_address")]
     public class UserAddress : BaseEntity
     {
         [ForeignKey("User")]

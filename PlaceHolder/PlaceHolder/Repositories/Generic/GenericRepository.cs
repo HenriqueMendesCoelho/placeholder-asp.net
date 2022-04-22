@@ -6,7 +6,7 @@ namespace PlaceHolder.Repositories.Generic
     public class GenericRepository<T> : IRepository<T> where T : BaseEntity
     {
 
-        private readonly DataContext _context;
+        protected readonly DataContext _context;
 
         public DbSet<T> dataset { get; set; }
 

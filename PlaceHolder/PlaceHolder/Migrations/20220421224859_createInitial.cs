@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -19,7 +20,10 @@ namespace PlaceHolder.Migrations
                     cpf = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
                     password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    backup_email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    role = table.Column<string>(type: "text", nullable: false),
+                    backup_email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    refresh_token = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    refresh_token_expiry_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,10 +31,10 @@ namespace PlaceHolder.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ticket",
+                name: "tickets",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Category = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
@@ -43,9 +47,9 @@ namespace PlaceHolder.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ticket", x => x.Id);
+                    table.PrimaryKey("PK_tickets", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ticket_user_UserId",
+                        name: "FK_tickets_user_UserId",
                         column: x => x.UserId,
                         principalTable: "user",
                         principalColumn: "id",
@@ -53,10 +57,10 @@ namespace PlaceHolder.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "user_address",
+                name: "users_address",
                 columns: table => new
                 {
-                    UserAddressId = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
                     Street = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     City = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     State = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
@@ -66,43 +70,43 @@ namespace PlaceHolder.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_user_address", x => x.UserAddressId);
+                    table.PrimaryKey("PK_users_address", x => x.user_id);
                     table.ForeignKey(
-                        name: "FK_user_address_user_UserAddressId",
-                        column: x => x.UserAddressId,
+                        name: "FK_users_address_user_user_id",
+                        column: x => x.user_id,
                         principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "historic",
+                name: "historical",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     text = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     TicketId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_historic", x => x.Id);
+                    table.PrimaryKey("PK_historical", x => x.id);
                     table.ForeignKey(
-                        name: "FK_historic_ticket_TicketId",
+                        name: "FK_historical_tickets_TicketId",
                         column: x => x.TicketId,
-                        principalTable: "ticket",
-                        principalColumn: "Id",
+                        principalTable: "tickets",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_historic_TicketId",
-                table: "historic",
+                name: "IX_historical_TicketId",
+                table: "historical",
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ticket_UserId",
-                table: "ticket",
+                name: "IX_tickets_UserId",
+                table: "tickets",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -110,18 +114,24 @@ namespace PlaceHolder.Migrations
                 table: "user",
                 column: "cpf",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_email",
+                table: "user",
+                column: "email",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "historic");
+                name: "historical");
 
             migrationBuilder.DropTable(
-                name: "user_address");
+                name: "users_address");
 
             migrationBuilder.DropTable(
-                name: "ticket");
+                name: "tickets");
 
             migrationBuilder.DropTable(
                 name: "user");

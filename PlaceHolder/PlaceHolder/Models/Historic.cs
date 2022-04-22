@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
-    [Table("historic")]
+    [Table("historical")]
     public class Historic : BaseEntity
     {
 

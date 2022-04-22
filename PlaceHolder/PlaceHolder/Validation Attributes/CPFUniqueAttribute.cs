@@ -1,6 +1,6 @@
 ﻿namespace PlaceHolder.Validation_Attributes
 {
-    public class EmailUniqueAttribute : ValidationAttribute
+    public class CPFUniqueAttribute : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
@@ -10,7 +10,7 @@
             var repo = (IUserRepository)validationContext.GetService(typeof(IUserRepository));
             if(repo == null) return null;
             
-            if (repo.FindByEmail(value.ToString()) != null) return new ValidationResult("Email already used");
+            if (repo.FindByCPF(value.ToString()) != null) return new ValidationResult("CPF already used");
             return ValidationResult.Success;
         }
     }

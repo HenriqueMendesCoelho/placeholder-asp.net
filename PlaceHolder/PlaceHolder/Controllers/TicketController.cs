@@ -1,7 +1,10 @@
-﻿namespace PlaceHolder.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace PlaceHolder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize("Bearer")]
     public class TicketController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

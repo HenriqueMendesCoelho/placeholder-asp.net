@@ -5,8 +5,6 @@ namespace PlaceHolder.Repositories.Implamentations
     public class TicketRepositoryImplementation : GenericRepository<Ticket>, ITicketRepository
     {
 
-        private readonly DataContext _context;
-
         public TicketRepositoryImplementation(DataContext context) : base(context) { }
 
         public List<Ticket> FindAllByUserEmail(string email)

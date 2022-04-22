@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
-    [Table("ticket")]
+    [Table("tickets")]
     public class Ticket : BaseEntity
     {
         public string Description { get; set; }

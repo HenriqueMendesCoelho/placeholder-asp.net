@@ -5,17 +5,18 @@ namespace PlaceHolder.DTOs
     public class UserDTO
     {
         [Required(ErrorMessage = "Name is required")]
-        [MaxLength(50, ErrorMessage = "FullName must have maximum of 50 characters")]
+        [MaxLength(50, ErrorMessage = "FullName must have maximum of {1} characters")]
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "CPF is required")]
         [RegularExpression("[0-9]{11}", ErrorMessage = "CPF format not valid")]
         [CpfValidation(ErrorMessage ="CPF not valid")]
+        [CPFUnique(ErrorMessage = "E-mail already used")]
         public string Cpf { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        [MinLength(8, ErrorMessage = "Password must have minimum of 8 characters")]
-        [MaxLength(20, ErrorMessage = "Password must have maximum of 20 characters")]
+        [MinLength(8, ErrorMessage = "Password must have minimum of {1} characters")]
+        [MaxLength(20, ErrorMessage = "Password must have maximum of {1} characters")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
