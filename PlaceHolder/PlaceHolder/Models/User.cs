@@ -20,35 +20,35 @@ namespace PlaceHolder.Models
         [Column("password")]
         [StringLength(500)]
         public string Password { get; set; }
+
         [Column("email")]
         [StringLength(100)]
         public string Email { get; set; }
 
-        [Column("role")]
-        public string Role { get; set; }
-
         [Column("backup_email")]
         [StringLength(100)]
         public string BackupEmail { get; set; }
+
         public UserAddress Address { get; set; }
+
         public List<Ticket> Ticket { get; set; }
 
         [Column("refresh_token")]
         [StringLength(500)]
         public string? RefreshToken { get; set; }
+
         [Column("refresh_token_expiry_time")]
-        [Required(AllowEmptyStrings = true)]
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
+        public DateTime CreationDate { get; set; }
 
-        public User()
-        {
-        
-        }
+        public Profiles.ProfilesEnum profile { get; set; }
+
+        public User() { }
 
         public User(string fullName, string cpf, string password, string email, 
-            string backupEmail, UserAddress address, List<Ticket> ticket, 
-            string refreshToken, DateTime refreshTokenExpiryTime)
+            string backupEmail, UserAddress address, List<Ticket> ticket, string? refreshToken, 
+            DateTime? refreshTokenExpiryTime, DateTime creationDate, Profiles.ProfilesEnum profile)
         {
             FullName = fullName;
             Cpf = cpf;
@@ -59,6 +59,8 @@ namespace PlaceHolder.Models
             Ticket = ticket;
             RefreshToken = refreshToken;
             RefreshTokenExpiryTime = refreshTokenExpiryTime;
+            CreationDate = creationDate;
+            this.profile = profile;
         }
     }
 }

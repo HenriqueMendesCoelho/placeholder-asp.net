@@ -20,9 +20,10 @@ namespace PlaceHolder.Services
             User user = ConvertToUser(obj);
             if(user != null)
             {
-                user.Role = "user";
+                user.profile = Profiles.ProfilesEnum.USER;
+                user.CreationDate = DateTime.Now;
 
-                if (FindAll == null) user.Role = "admin";
+                if (FindAll().Count() <= 0) user.profile = Profiles.ProfilesEnum.ADMIN;
 
                 user.Password = _repository.EncryptPassword(obj.Password, SHA512.Create());
                 user.RefreshTokenExpiryTime = DateTime.Now;
@@ -46,20 +47,23 @@ namespace PlaceHolder.Services
 
         public void Delete(string email)
         {
-            if(email == null)
-                throw new Exception(string.Format("E-mail can not be null or empty"));
+            User user = _repository.FindByEmailWithInclude(email);
 
-            var user = _repository.FindByEmailWithInclude(email);
-
-            if (user == null)
-                throw new Exception(string.Format("User can not be found"));
+            if (user == null) throw new ApiInternalException("User not found");
 
             _repository.Delete(user.Id);
         }
 
         public List<User> FindAll()
         {
-            return _repository.FindAll();
+            List<User> users = _repository.FindAll();
+
+            foreach (User user in users)
+            {
+                user.Password = "*****";
+            }
+
+            return users;
         }
 
         public User? FindByEmail(string email)

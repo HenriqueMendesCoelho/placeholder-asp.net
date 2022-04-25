@@ -18,12 +18,12 @@ namespace PlaceHolder.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     full_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     cpf = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    password = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    role = table.Column<string>(type: "text", nullable: false),
                     backup_email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     refresh_token = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    refresh_token_expiry_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    refresh_token_expiry_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    profile = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,12 +37,13 @@ namespace PlaceHolder.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Category = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    SubCategory = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    Status = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    Responsible = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Employee = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Category = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    SubCategory = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    Responsible = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Employee = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -86,6 +87,7 @@ namespace PlaceHolder.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     text = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TicketId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

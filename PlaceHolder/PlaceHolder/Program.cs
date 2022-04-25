@@ -12,12 +12,12 @@ using PlaceHolder.Repositories.Generic;
 using PlaceHolder.Security;
 using PlaceHolder.Security.Implementations;
 using PlaceHolder.Configurations;
-using Microsoft.Extensions.Options;
-using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +38,39 @@ builder.Services.AddScoped<IAuthService, AuthServiceImplementation>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+#region [Swagger-Configuration]
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Placeholder API - ASP.NET 6",
+        Description = "An ASP.NET Core Web API for managing Tickets",
+        Contact = new OpenApiContact
+        {
+            Url = new Uri("https://example.com/contact")
+        }
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme.
+                        Enter 'Bearer' [space] and then your token in the text input below.
+                        Example: 'Bearer d5s4g65sd4hg'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
+#endregion
+
+#region [JWT-Configuration]
 var token = builder.Configuration.GetSection("TokenConfiguratios").Get<TokenConfiguration>();
 
 builder.Services.AddSingleton(token);
@@ -68,7 +99,7 @@ builder.Services.AddAuthorization(auth =>
         .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser().Build());
 });
-
+#endregion
 
 #region [DBContext]
 builder.Services.AddDbContext<DataContext>(options =>

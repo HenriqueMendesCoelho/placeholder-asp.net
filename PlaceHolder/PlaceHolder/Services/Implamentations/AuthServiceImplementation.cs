@@ -30,7 +30,7 @@ namespace PlaceHolder.Services.Implamentations
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
-                //new Claim(ClaimTypes.Role, user.Role) -- Insert Role in token
+                //new Claim(ClaimTypes.Role, user.profile.ToString()) //-- Insert Role in token
             };
 
             var accessToken = _tokenService.GenerateAccessToken(claims);
@@ -51,7 +51,6 @@ namespace PlaceHolder.Services.Implamentations
                 accessToken,
                 refreshToken
             );
-                
         }
     }
 }

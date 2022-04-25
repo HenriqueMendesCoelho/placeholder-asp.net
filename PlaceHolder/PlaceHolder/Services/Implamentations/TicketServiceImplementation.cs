@@ -11,12 +11,13 @@ namespace PlaceHolder.Services.Implamentations
             _repository = repository;
         }
 
-        public Ticket? CreateByUser(TicketCreateUserDTO ticket)
+        public Ticket? CreateByUser(TicketCreateUserDTO obj)
         {
-            Ticket _ticket = convertTicketUserDTO(ticket);
-            _ticket.Status = "Aberto";
+            Ticket ticket = convertTicketUserDTO(obj);
+            ticket.Status = Status.StatusEnum.ABERTO;
+            ticket.CreationDate = DateTime.Now;
             
-            return _repository.Create(_ticket);
+            return _repository.Create(ticket);
         }
 
         public void Delete(long id)
