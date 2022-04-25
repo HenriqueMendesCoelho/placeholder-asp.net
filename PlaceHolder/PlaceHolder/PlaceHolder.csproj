@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<NoWarn>$(NoWarn);1591</NoWarn>
+	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	<UserSecretsId>23d8d736-7551-42e7-ac83-f79628865f49</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 </PropertyGroup>
 
 <ItemGroup>
@@ -20,6 +23,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />

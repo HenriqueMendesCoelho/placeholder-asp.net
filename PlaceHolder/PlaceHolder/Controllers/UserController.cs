@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using PlaceHolder.DTOs;
+using PlaceHolder.Methods;
 using PlaceHolder.Security;
 using System.Security.Claims;
 
@@ -27,7 +28,12 @@ namespace PlaceHolder.Controllers
         /// <summary>
         /// Search user by id passing in the path URL - ADM ONLY
         /// </summary>
-        [HttpGet("v1/{id}")]
+        [HttpGet("v1/{id}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public ActionResult<User?> SearchUser(long id)
         {
             //Getting user by jwt bearer token
@@ -39,7 +45,7 @@ namespace PlaceHolder.Controllers
 
             User search = _userService.FindByID(id);
 
-            if (search == null) return NotFound("User not found");
+            if (search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
             return Ok(user);
         }
 
@@ -47,16 +53,21 @@ namespace PlaceHolder.Controllers
         /// Search ALL user in base return a list of users
         /// </summary>
         [HttpGet("v1/list")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public ActionResult<List<User>> ListUsers()
         {
             return _userService.FindAll();
         }
 
         /// <summary>
-        /// Create a user
+        /// Create a user bearer token not required
         /// </summary>
         [HttpPost("v1")]
         [AllowAnonymous]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public ActionResult<User?> CreateUser(UserDTO obj)
         {
             _userService.Create(obj);
@@ -70,7 +81,7 @@ namespace PlaceHolder.Controllers
         [HttpPut("v1")]
         public ActionResult<User?> Update(User user)
         {
-            if(user == null) return BadRequest("User can not be null");
+            if(user == null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User can not be null"));
 
             return _userService.Update(user);
         }
@@ -78,10 +89,22 @@ namespace PlaceHolder.Controllers
         /// <summary>
         /// DELETE user by e-mail - ADM ONLY
         /// </summary>
-        [HttpDelete("v1/{email}")]
+        [HttpDelete("v1/{email}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public ActionResult DeleteUser (string email)
         {
-            if(email == null) return BadRequest("Email can't be null");
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User user = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin
+            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+
+            if (email == null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("Email can't be null"));
 
             try
             {
@@ -90,10 +113,44 @@ namespace PlaceHolder.Controllers
             catch (Exception)
             {
 
-                return BadRequest("User not found");
+                return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User not found"));
             }
 
-            return Ok("User deleted");
+            return Ok(new JsonReturnStandard().SingleReturnJson("User deleted"));
+        }
+
+        /// <summary>
+        /// Add or remove admin privilege - ADM ONLY
+        /// </summary>
+        [HttpPost("v1/{id}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult AddOrRemoveAdminPrivilege(long id)
+        {
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User userLoged = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin
+            if (userLoged.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+
+            User user = _userService.FindByID(id);
+
+            if(user == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
+
+            if(user.profile == Profiles.ProfilesEnum.ADMIN)
+            {
+                userLoged.profile = Profiles.ProfilesEnum.USER;
+                return Ok(new JsonReturnStandard().SingleReturnJson("User is no longer an admin"));
+            }
+            else
+            {
+                userLoged.profile = Profiles.ProfilesEnum.ADMIN;
+                return Ok(new JsonReturnStandard().SingleReturnJson("User is now admin"));
+            }
         }
     }
 }

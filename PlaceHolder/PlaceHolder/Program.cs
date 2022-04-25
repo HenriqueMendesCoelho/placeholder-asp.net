@@ -64,6 +64,21 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
 
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
@@ -101,10 +116,29 @@ builder.Services.AddAuthorization(auth =>
 });
 #endregion
 
+#region [HerokuDBEnv]
+var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if(!string.IsNullOrEmpty(connectionUrl))
+{
+    var databaseUri = new Uri(connectionUrl);
+
+    string db = databaseUri.LocalPath.TrimStart('/');
+    string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+    connectionUrl = $"User Id={userInfo[0]};Password={userInfo[1]};Server={databaseUri.Host};Port={databaseUri.Port};Database={db};";
+} else
+{
+    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+
+Console.WriteLine("URL_DB>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+connectionUrl);
+#endregion
+
 #region [DBContext]
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(connectionUrl);
 });
 #endregion
 
@@ -116,12 +150,22 @@ var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    dataContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
+/*
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}*/
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 #region [CorsApp]
 app.UseCors( c =>
