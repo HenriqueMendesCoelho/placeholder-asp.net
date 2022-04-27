@@ -25,7 +25,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Get ticket by id - ADM Or Emplyee ONLY
+        /// Get ticket by id - ADM Or EMPLOYEE ONLY
         /// </summary>
         [HttpGet("v1/{id}/adm")]
         [ProducesResponseType(200, Type = typeof(Ticket))]
@@ -76,7 +76,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Employee loged takes responsibility for ticket - ADM Or Employee Only
+        /// Employee loged takes responsibility for ticket - ADM Or EMPLOYEE Only
         /// </summary>
         [HttpPatch("v1/{id}/adm")]
         [ProducesResponseType(200)]
@@ -120,7 +120,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Transfer ticker to another ADM - ADM Or Employee Only
+        /// Transfer ticker to another ADM - ADM Or EMPLOYEE Only
         /// </summary>
         /// <remarks>
         /// The body must be json with just **"email@email.com"** with the **quotes**, but it must be a **JSON** and not text
@@ -178,7 +178,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Update ticket - ADM Or Employee Only
+        /// Update ticket - ADM Or EMPLOYEE Only
         /// </summary>
         [HttpPut]
         [ProducesResponseType(200)]

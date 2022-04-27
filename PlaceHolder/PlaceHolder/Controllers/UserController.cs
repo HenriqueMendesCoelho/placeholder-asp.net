@@ -26,7 +26,7 @@ namespace PlaceHolder.Controllers
         //[Authorize(Roles ="admin")] - Deixar para apenas admin, porém o
 
         /// <summary>
-        /// Search user by id passing in the path URL - ADM Or Employee ONLY
+        /// Search user by id passing in the path URL - ADM Or EMPLOYEE ONLY
         /// </summary>
         [HttpGet("v1/{id}/adm")]
         [ProducesResponseType(200)]
@@ -50,7 +50,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Search ALL user in base return a list of users - ADM Or Employee ONLY
+        /// Search ALL user in base return a list of users - ADM Or EMPLOYEE ONLY
         /// </summary>
         [HttpGet("v1/list")]
         [ProducesResponseType(200)]
