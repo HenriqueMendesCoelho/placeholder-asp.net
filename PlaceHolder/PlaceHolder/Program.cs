@@ -49,7 +49,8 @@ builder.Services.AddSwaggerGen(options =>
         Description = "An ASP.NET Core Web API for managing Tickets",
         Contact = new OpenApiContact
         {
-            Url = new Uri("https://example.com/contact")
+            Name = "Vercel",
+            Url = new Uri("https://placeholder-web.vercel.app/")
         }
     });
 

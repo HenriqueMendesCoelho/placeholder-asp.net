@@ -7,28 +7,34 @@ namespace PlaceHolder.Models
     public class Ticket : BaseEntity
     {
         public string Description { get; set; }
+
         [StringLength(30)]
         public string? Category { get; set; }
+
         [StringLength(30)]
         public string? SubCategory { get; set; }
+
         [StringLength(50)]
         public string? Responsible { get; set; }
+
         [StringLength(50)]
         public string? Employee { get; set; }
+
         [StringLength(50)]
         public string Title { get; set; }
+
         public DateTime? CreationDate { get; set; }
+
         public Status.StatusEnum Status { get; set; }
 
         [JsonIgnore]
         public User User { get; set; }
+
         public long UserId { get; set; }
+
         public List<Historic>? Historical { get; set; }
 
-        public Ticket()
-        {
-
-        }
+        public Ticket() { }
 
         public Ticket(string description, string? category, string? subCategory, 
             string? responsible, string? employee, string title, DateTime? creationDate, 

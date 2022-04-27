@@ -6,6 +6,7 @@ namespace PlaceHolder.Services
 {
     public class UserServiceImplementation : IUserService
     {
+        private readonly ILogger<UserServiceImplementation> _logger;
         private readonly IUserRepository _repository;
 
         public UserServiceImplementation(IUserRepository userRepository)
@@ -34,8 +35,8 @@ namespace PlaceHolder.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    throw new ApiInternalException("Internal Server Error - Contact Administrator");
+                    _logger.LogError(ex.ToString());
+                    throw;
                 }
                 
             }
@@ -68,12 +69,22 @@ namespace PlaceHolder.Services
 
         public User? FindByEmail(string email)
         {
-            return _repository.FindByEmailWithInclude(email);
+            var user = _repository.FindByEmailWithInclude(email);
+            if (user == null) return null;
+
+            user.Password = "*****";
+
+            return user;
         }
 
         public User? FindByID(long id)
         {
-            return _repository.FindByIDWithInclude(id);
+            var user = _repository.FindByIDWithInclude(id);
+            if(user == null) return null;
+
+            user.Password = "*****";
+
+            return user;
         }
         public User? Update(User user)
         {

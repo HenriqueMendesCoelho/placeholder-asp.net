@@ -44,9 +44,9 @@ namespace PlaceHolder.Controllers
             if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
 
             User search = _userService.FindByID(id);
-
             if (search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
-            return Ok(user);
+
+            return Ok(search);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace PlaceHolder.Controllers
         /// </summary>
         [HttpPost("v1")]
         [AllowAnonymous]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(500)]
         public ActionResult<User?> CreateUser(UserDTO obj)
         {
@@ -79,6 +79,9 @@ namespace PlaceHolder.Controllers
         /// Update a user
         /// </summary>
         [HttpPut("v1")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         public ActionResult<User?> Update(User user)
         {
             if(user == null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User can not be null"));
@@ -110,10 +113,10 @@ namespace PlaceHolder.Controllers
             {
                 _userService.Delete(email);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User not found"));
+                _logger.LogError(e.ToString());
+                return Problem("An error ocurred contact administrator");
             }
 
             return Ok(new JsonReturnStandard().SingleReturnJson("User deleted"));

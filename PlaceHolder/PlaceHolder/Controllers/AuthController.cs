@@ -14,6 +14,9 @@ namespace PlaceHolder.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Login generate JWT token
+        /// </summary>
         [HttpPost("login")]
         public IActionResult login([FromBody] UserLoginDTO obj)
         {
