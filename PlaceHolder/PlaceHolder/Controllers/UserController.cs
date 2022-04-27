@@ -26,7 +26,7 @@ namespace PlaceHolder.Controllers
         //[Authorize(Roles ="admin")] - Deixar para apenas admin, porém o
 
         /// <summary>
-        /// Search user by id passing in the path URL - ADM ONLY
+        /// Search user by id passing in the path URL - ADM Or Employee ONLY
         /// </summary>
         [HttpGet("v1/{id}/adm")]
         [ProducesResponseType(200)]
@@ -41,7 +41,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             User search = _userService.FindByID(id);
             if (search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
@@ -50,7 +50,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Search ALL user in base return a list of users
+        /// Search ALL user in base return a list of users - ADM Or Employee ONLY
         /// </summary>
         [HttpGet("v1/list")]
         [ProducesResponseType(200)]
@@ -58,6 +58,13 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(500)]
         public ActionResult<List<User>> ListUsers()
         {
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User user = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin
+            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+
             return _userService.FindAll();
         }
 
