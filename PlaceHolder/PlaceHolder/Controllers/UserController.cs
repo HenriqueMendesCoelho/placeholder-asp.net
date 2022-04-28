@@ -40,8 +40,8 @@ namespace PlaceHolder.Controllers
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             User search = _userService.FindByID(id);
             if (search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
@@ -62,8 +62,8 @@ namespace PlaceHolder.Controllers
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             return _userService.FindAll();
         }

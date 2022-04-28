@@ -32,15 +32,14 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404, Type = typeof(Dictionary<string, object>))]
-        [ProducesResponseType(500)]
         public ActionResult<Ticket> Get(long id)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             Ticket ticket = _ticketService.FindByID(id);
 
@@ -91,8 +90,8 @@ namespace PlaceHolder.Controllers
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             Ticket ticket = _ticketService.FindByID(id);
 
@@ -141,8 +140,8 @@ namespace PlaceHolder.Controllers
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             if (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)) return StatusCode(StatusCodes.Status406NotAcceptable, 
                 new JsonReturnStandard().SingleReturnJsonError("The ticker cannot be transferred to itself"));
@@ -185,14 +184,15 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
         public ActionResult<Ticket> UpdateTicket(Ticket obj)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User user = _userService.FindByEmail(principal.Identity.Name);
 
-            //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN || user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
 
             var search = _ticketService.FindByID(obj.Id);
             if(search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Ticket not found"));
@@ -221,6 +221,37 @@ namespace PlaceHolder.Controllers
             }
 
             return Ok(obj);
+        }
+
+        /// <summary>
+        /// Delete ticket - ADM Only
+        /// </summary>
+        [HttpDelete("v1/{id}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public ActionResult DeleteTicket(long id)
+        {
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User user = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin
+            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+
+            Ticket ticket = _ticketService.FindByID(id);
+
+            try
+            {
+                _ticketService.Delete(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem("An error ocurred contact administrator");
+            }
+
+            return Ok(new JsonReturnStandard().SingleReturnJson("Ticket deleted"));
         }
     }
 }
