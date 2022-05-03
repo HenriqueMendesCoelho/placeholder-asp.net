@@ -62,6 +62,7 @@ namespace PlaceHolder.Controllers
             userAddress.Street = (!string.IsNullOrEmpty(response.Result.Logradouro)) ? response.Result.Logradouro : obj.Street;
             userAddress.Complement = obj.Complement;
             userAddress.Id = userLoged.Id;
+            userAddress.Number = obj.Number;
 
             try
             {
