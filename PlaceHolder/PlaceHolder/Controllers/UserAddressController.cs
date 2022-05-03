@@ -29,6 +29,9 @@ namespace PlaceHolder.Controllers
         /// <summary>
         /// Create an UserAddress
         /// </summary>
+        /// <remarks>
+        /// State, City, District, Street is **not** mandatory, it will only be used if in the integration with viaCEP it comes blank.
+        /// </remarks>
         [HttpPost("v1")]
         public ActionResult CreateUserAddress(UserAddressDTO obj)
         {
@@ -79,6 +82,9 @@ namespace PlaceHolder.Controllers
         /// <summary>
         /// Update an UserAddress
         /// </summary>
+        /// <remarks>
+        /// State, City, District, Street is **not** mandatory, it will only be used if in the integration with viaCEP it comes blank
+        /// </remarks>
         [HttpPut("v1")]
         public ActionResult UpdateUserAddress(UserAddressDTO obj)
         {

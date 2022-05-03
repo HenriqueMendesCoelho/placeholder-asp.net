@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using PlaceHolder.DTOs;
-using PlaceHolder.Integrations.ViaCEP;
-using PlaceHolder.Integrations.ViaCEP.Model;
 using PlaceHolder.Methods;
 using PlaceHolder.Security;
 using System.Security.Claims;
