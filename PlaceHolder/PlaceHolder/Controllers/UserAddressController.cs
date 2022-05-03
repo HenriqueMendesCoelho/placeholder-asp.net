@@ -36,8 +36,8 @@ namespace PlaceHolder.Controllers
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
             User userLoged = _userService.FindByEmail(principal.Identity.Name);
 
-            if(userLoged == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
-            if (userLoged.Address != null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User already contains a Address in the base"));
+            if (userLoged == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
+            if (userLoged.Address != null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User already contains a Address"));
 
             ViaCEPIntegration viaCEP = new();
             Task<ViaCEPResponse> response;
@@ -51,7 +51,7 @@ namespace PlaceHolder.Controllers
                 return Problem("An error ocurred contact administrator");
             }
 
-            if (response == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("CEP not found"));
+            if (response.Result == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("CEP not found"));
 
             UserAddress userAddress = new();
 
@@ -67,6 +67,55 @@ namespace PlaceHolder.Controllers
             try
             {
                 _service.Create(userAddress);
+                return Ok(userAddress);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return Problem("An error ocurred contact administrator");
+            }
+        }
+
+        /// <summary>
+        /// Update an UserAddress
+        /// </summary>
+        [HttpPut("v1")]
+        public ActionResult UpdateUserAddress(UserAddressDTO obj)
+        {
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User userLoged = _userService.FindByEmail(principal.Identity.Name);
+
+            UserAddress userAddress = _service.FindByID(userLoged.Id);
+
+            if (userAddress == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Address of the user logged not found"));
+
+            ViaCEPIntegration viaCEP = new();
+            Task<ViaCEPResponse> response;
+
+            try
+            {
+                response = viaCEP.ValidationCEP(Convert.ToString(obj.Cep));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return Problem("An error ocurred contact administrator");
+            }
+
+            if(response.Result == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("CEP not found"));
+
+            userAddress.Cep = response.Result.Cep.Replace("-", "");
+            userAddress.State = (!string.IsNullOrEmpty(response.Result.Uf)) ? response.Result.Uf : obj.State;
+            userAddress.City = (!string.IsNullOrEmpty(response.Result.Localidade)) ? response.Result.Localidade : obj.City;
+            userAddress.District = (!string.IsNullOrEmpty(response.Result.Bairro)) ? response.Result.Bairro : obj.District;
+            userAddress.Street = (!string.IsNullOrEmpty(response.Result.Logradouro)) ? response.Result.Logradouro : obj.Street;
+            userAddress.Complement = obj.Complement;
+            userAddress.Number = obj.Number;
+
+            try
+            {
+                _service.Update(userAddress);
                 return Ok(userAddress);
             }
             catch (Exception ex)

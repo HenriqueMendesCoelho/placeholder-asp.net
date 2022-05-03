@@ -20,26 +20,20 @@ namespace PlaceHolder.Integrations.ViaCEP
         {
             string Url = $"https://viacep.com.br/ws/{ cep }/json/";
 
-            try
+            
+            using(HttpResponseMessage response = await ApiHttpClient.ApiClient.GetAsync(Url))
             {
-                using(HttpResponseMessage response = await ApiHttpClient.ApiClient.GetAsync(Url))
+                if(response.IsSuccessStatusCode)
                 {
-                    if(response.IsSuccessStatusCode)
-                    {
-                        ViaCEPResponse responseModel = await response.Content.ReadFromJsonAsync<ViaCEPResponse>();
-                        return responseModel;
-                    } else
-                    {
-                        throw new ApiInternalException(response.ReasonPhrase);
-                    }
+                    ViaCEPResponse responseModel = await response.Content.ReadFromJsonAsync<ViaCEPResponse>();
+                    if(responseModel.Cep == null) return null;
+
+                    return responseModel;
+                } else
+                {
+                    throw new ApiInternalException(response.ReasonPhrase);
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-            }
-
-            return new ViaCEPResponse();
         }
     }
 }
