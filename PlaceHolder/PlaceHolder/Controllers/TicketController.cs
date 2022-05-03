@@ -11,12 +11,12 @@ namespace PlaceHolder.Controllers
     [Authorize("Bearer")]
     public class TicketController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<TicketController> _logger;
         private ITicketService _ticketService;
         private ITokenService _tokenService;
         private IUserService _userService;
 
-        public TicketController(ILogger<UserController> logger, ITicketService ticketService, ITokenService tokenService, IUserService userService)
+        public TicketController(ILogger<TicketController> logger, ITicketService ticketService, ITokenService tokenService, IUserService userService)
         {
             _logger = logger;
             _ticketService = ticketService;

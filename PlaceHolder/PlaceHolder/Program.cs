@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using PlaceHolder.Integrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -149,6 +150,8 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
+ApiHttpClient.InicializeClient();
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 using (var scope = app.Services.CreateScope())
@@ -172,7 +175,7 @@ app.UseSwaggerUI();
 app.UseCors( c =>
 {
     c.AllowAnyOrigin();
-    c.WithMethods("GET", "PATH", "DELETE", "POST");
+    c.WithMethods("GET", "PUT", "PATH", "DELETE", "POST");
     c.AllowAnyHeader();
 });
 #endregion

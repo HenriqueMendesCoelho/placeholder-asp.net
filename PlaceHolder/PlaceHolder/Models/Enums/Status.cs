@@ -2,7 +2,6 @@
 {
     public class Status
     {
-
         public enum StatusEnum
         {
             ABERTO,
@@ -12,7 +11,6 @@
             FECHADO,
             CANCELADO
         }
-
         public Status() { }
     }
 }

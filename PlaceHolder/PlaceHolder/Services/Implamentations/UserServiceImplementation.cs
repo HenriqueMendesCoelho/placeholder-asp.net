@@ -72,8 +72,6 @@ namespace PlaceHolder.Services
             var user = _repository.FindByEmailWithInclude(email);
             if (user == null) return null;
 
-            user.Password = "*****";
-
             return user;
         }
 
@@ -81,8 +79,6 @@ namespace PlaceHolder.Services
         {
             var user = _repository.FindByIDWithInclude(id);
             if(user == null) return null;
-
-            user.Password = "*****";
 
             return user;
         }

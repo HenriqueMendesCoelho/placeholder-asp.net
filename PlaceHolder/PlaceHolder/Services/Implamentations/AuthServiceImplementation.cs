@@ -20,7 +20,7 @@ namespace PlaceHolder.Services.Implamentations
             _tokenService = tokenService;
         }
 
-        public TokenDTO? ValidateCredencials(UserLoginDTO obj)
+        public TokenDTO? Login(UserLoginDTO obj)
         {
             var user = _userRepository.ValidateCredencials(obj);
 
@@ -41,6 +41,28 @@ namespace PlaceHolder.Services.Implamentations
 
             _userRepository.Update(user);
 
+            return GenerateTokenDTO(accessToken, refreshToken);
+        }
+
+        public TokenDTO? RefreshToken(RefreshTokenDTO obj)
+        {
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(obj.AccessToken.ToString().Substring(7));
+            User user = _userRepository.FindByEmail(principal.Identity.Name);
+
+            if(user == null || 
+                user.RefreshToken != obj.RefreshToken || 
+                user.RefreshTokenExpiryTime <= DateTime.Now) return null;
+
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_configuration.DaysToExpire);
+            user.RefreshToken = _tokenService.GenerateRefreshToken();
+
+            _userRepository.Update(user);
+
+            return GenerateTokenDTO(_tokenService.GenerateAccessToken(principal.Claims), user.RefreshToken);
+        }
+
+        private TokenDTO? GenerateTokenDTO(string accessToken, string refreshToken)
+        {
             DateTime createDate = DateTime.Now;
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
 

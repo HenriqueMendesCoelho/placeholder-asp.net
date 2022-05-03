@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using PlaceHolder.DTOs;
+using PlaceHolder.Integrations.ViaCEP;
+using PlaceHolder.Integrations.ViaCEP.Model;
 using PlaceHolder.Methods;
 using PlaceHolder.Security;
 using System.Security.Claims;
@@ -23,7 +25,7 @@ namespace PlaceHolder.Controllers
         }
 
 
-        //[Authorize(Roles ="admin")] - Deixar para apenas admin, porém o
+        //[Authorize(Roles ="admin")] - Deixar para apenas admin, porém não irei utilizar devido a limitações na arquitetura original do token JWT
 
         /// <summary>
         /// Search user by id passing in the path URL - ADM Or EMPLOYEE ONLY
@@ -130,15 +132,16 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Add or remove admin privilege - ADM ONLY
+        /// Set privilege for a User - ADM ONLY
         /// </summary>
         [HttpPost("v1/{id}/adm")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public ActionResult AddOrRemoveAdminPrivilege(long id)
+        public ActionResult AddOrRemoveAdminPrivilege(long id, [FromBody] string privilege)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
@@ -150,17 +153,40 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByID(id);
 
             if(user == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
+            if (privilege != "ADMIN" && privilege != "EMPLOYEE" && privilege != "USER") return BadRequest("Role informed not exists");
 
-            if(user.profile == Profiles.ProfilesEnum.ADMIN)
+            if(privilege == "ADMIN")
             {
-                userLoged.profile = Profiles.ProfilesEnum.USER;
-                return Ok(new JsonReturnStandard().SingleReturnJson("User is no longer an admin"));
-            }
-            else
+                if(user.profile == Profiles.ProfilesEnum.ADMIN) return Conflict("User already is an admin");
+                user.profile = Profiles.ProfilesEnum.ADMIN;
+                _userService.Update(user);
+
+                return Ok(new JsonReturnStandard().SingleReturnJson("User is now an admin"));
+            } else if(privilege == "EMPLOYEE")
             {
-                userLoged.profile = Profiles.ProfilesEnum.ADMIN;
-                return Ok(new JsonReturnStandard().SingleReturnJson("User is now admin"));
+                if (user.profile == Profiles.ProfilesEnum.EMPLOYEE) return Conflict("User already is an admin");
+                user.profile = Profiles.ProfilesEnum.EMPLOYEE;
+                _userService.Update(user);
+
+                return Ok(new JsonReturnStandard().SingleReturnJson("User is now an employee"));
+            } else
+            {
+                if (user.profile == Profiles.ProfilesEnum.USER) return Conflict("User already is an USER");
+                user.profile = Profiles.ProfilesEnum.USER;
+                _userService.Update(user);
+
+                return Ok(new JsonReturnStandard().SingleReturnJson("User is now an employee"));
             }
+        }
+
+        /// <summary>
+        /// Return user by token
+        /// </summary>
+        [HttpGet("v1")]
+        public User? searchUserLogged()
+        {
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            return _userService.FindByEmail(principal.Identity.Name);
         }
     }
 }

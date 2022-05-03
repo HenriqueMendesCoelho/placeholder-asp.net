@@ -4,6 +4,8 @@ namespace PlaceHolder.Services
 {
     public interface IAuthService
     {
-        TokenDTO? ValidateCredencials(UserLoginDTO user);
+        TokenDTO? Login(UserLoginDTO obj);
+
+        TokenDTO? RefreshToken(RefreshTokenDTO obj);
     }
 }

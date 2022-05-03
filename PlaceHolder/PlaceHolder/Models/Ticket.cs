@@ -25,6 +25,7 @@ namespace PlaceHolder.Models
 
         public DateTime? CreationDate { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Status.StatusEnum Status { get; set; }
 
         [JsonIgnore]
