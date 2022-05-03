@@ -95,8 +95,7 @@ namespace PlaceHolder.Services
                 FullName = obj.FullName,
                 Email = obj.Email,
                 Password = obj.Password,
-                Cpf = obj.Cpf,
-                BackupEmail = obj.BackupEmail
+                Cpf = obj.Cpf
             };
             return u;
         }

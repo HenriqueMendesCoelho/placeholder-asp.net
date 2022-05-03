@@ -25,10 +25,6 @@ namespace PlaceHolder.Models
         [StringLength(100)]
         public string Email { get; set; }
 
-        [Column("backup_email")]
-        [StringLength(100)]
-        public string BackupEmail { get; set; }
-
         public UserAddress Address { get; set; }
 
         public List<Ticket> Ticket { get; set; }
@@ -46,15 +42,14 @@ namespace PlaceHolder.Models
 
         public User() { }
 
-        public User(string fullName, string cpf, string password, string email, 
-            string backupEmail, UserAddress address, List<Ticket> ticket, string? refreshToken, 
+        public User(string fullName, string cpf, string password, string email,
+            UserAddress address, List<Ticket> ticket, string? refreshToken, 
             DateTime? refreshTokenExpiryTime, DateTime creationDate, Profiles.ProfilesEnum profile)
         {
             FullName = fullName;
             Cpf = cpf;
             Password = password;
             Email = email;
-            BackupEmail = backupEmail;
             Address = address;
             Ticket = ticket;
             RefreshToken = refreshToken;

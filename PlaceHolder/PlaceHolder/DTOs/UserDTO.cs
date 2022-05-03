@@ -22,20 +22,16 @@ namespace PlaceHolder.DTOs
         [Required(ErrorMessage = "Email is required")]
         [EmailUnique(ErrorMessage ="E-mail already used")]
         public string Email { get; set; }
-
-        [Required(ErrorMessage = "BackupEmail is required")]
-        public string BackupEmail { get; set; }
         public UserDTO()
         {
 
         }
-        public UserDTO(string fullName, string cpf, string password, string email, string backupEmail)
+        public UserDTO(string fullName, string cpf, string password, string email)
         {
             FullName = fullName;
             Cpf = cpf;
             Password = password;
             Email = email;
-            BackupEmail = backupEmail;
         }
     }
 }
