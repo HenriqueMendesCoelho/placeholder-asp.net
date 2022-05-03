@@ -23,7 +23,7 @@ namespace PlaceHolder.Models
         public int Number { get; set; }
 
         [StringLength(50)]
-        public string Complement { get; set; }
+        public string? Complement { get; set; }
 
         [StringLength(50)]
         public string District { get; set; }
@@ -39,7 +39,7 @@ namespace PlaceHolder.Models
 
         }
 
-        public UserAddress(long id, string street, string city, string state, int number, string complement, string district, string cep, User user)
+        public UserAddress(long id, string street, string city, string state, int number, string? complement, string district, string cep, User user)
         {
             Id = id;
             Street = street;

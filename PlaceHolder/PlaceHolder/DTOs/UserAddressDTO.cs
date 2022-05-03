@@ -21,9 +21,8 @@
         [Range(1, 10000000, ErrorMessage = "Value for number must be between {1} and {2}")]
         public int Number { get; set; }
 
-        [Required(ErrorMessage = "Complement is required")]
         [MaxLength(50, ErrorMessage = "Complement must have maximum of {1} characters")]
-        public string Complement { get; set; }
+        public string? Complement { get; set; }
 
         public string Cep { get; set; }
     }

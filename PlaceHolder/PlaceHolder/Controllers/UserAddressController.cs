@@ -30,9 +30,13 @@ namespace PlaceHolder.Controllers
         /// Create an UserAddress
         /// </summary>
         /// <remarks>
-        /// State, City, District, Street is **not** mandatory, it will only be used if in the integration with viaCEP it comes blank.
+        /// State, City, District, Street is **NOT** mandatory, it will only be used if in the integration with viaCEP it comes blank.
         /// </remarks>
         [HttpPost("v1")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public ActionResult CreateUserAddress(UserAddressDTO obj)
         {
             //Getting user by jwt bearer token
@@ -83,9 +87,13 @@ namespace PlaceHolder.Controllers
         /// Update an UserAddress
         /// </summary>
         /// <remarks>
-        /// State, City, District, Street is **not** mandatory, it will only be used if in the integration with viaCEP it comes blank
+        /// State, City, District, Street is **NOT** mandatory, it will only be used if in the integration with viaCEP it comes blank
         /// </remarks>
         [HttpPut("v1")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public ActionResult UpdateUserAddress(UserAddressDTO obj)
         {
             //Getting user by jwt bearer token
@@ -123,6 +131,39 @@ namespace PlaceHolder.Controllers
             {
                 _service.Update(userAddress);
                 return Ok(userAddress);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return Problem("An error ocurred contact administrator");
+            }
+        }
+
+        /// <summary>
+        /// Delete an UserAddress - ADM only
+        /// </summary>
+        [HttpDelete("v1/{id}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult DeleteUserAddress(long id)
+        {
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User userLoged = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin
+            if (userLoged.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+
+            UserAddress userAddress = _service.FindByID(id);
+            if(userAddress == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Address not found"));
+
+            try
+            {
+                _service.Delete(userAddress.Id);
+                return Ok(new JsonReturnStandard().SingleReturnJson("Address deleted"));
             }
             catch (Exception ex)
             {
