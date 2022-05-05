@@ -13,9 +13,9 @@ namespace PlaceHolder.Repositories.Implamentations
 
         User? FindByCPF(string cpf);
 
-        User? ValidateCredencials(UserLoginDTO user);
+        User? ValidateCredencials(UserLoginDTO obj);
 
-        String EncryptPassword(string input, SHA512 algorithm);
+        string EncryptPassword(string input, SHA512 algorithm);
 
     }
 }

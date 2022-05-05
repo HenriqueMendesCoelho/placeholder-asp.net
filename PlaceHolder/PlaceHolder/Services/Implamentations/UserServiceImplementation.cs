@@ -100,6 +100,20 @@ namespace PlaceHolder.Services
             return u;
         }
 
-    
+        public bool ValidateCredencials(string Email, string Password)
+        {
+            if(Email == null || Password == null) return false;
+
+            UserLoginDTO obj = new ( Email, Password );
+
+            User user = _repository.ValidateCredencials(obj);
+
+            return (user != null) ? true : false;
+        }
+
+        public string EncryptPassword(string input)
+        {
+            return _repository.EncryptPassword(input, SHA512.Create());
+        }
     }
 }

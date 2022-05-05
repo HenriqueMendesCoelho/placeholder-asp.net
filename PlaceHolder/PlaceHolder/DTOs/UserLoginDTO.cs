@@ -6,5 +6,12 @@
 
         public string Password { get; set; }
 
+        public UserLoginDTO() { }
+
+        public UserLoginDTO(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
     }
 }

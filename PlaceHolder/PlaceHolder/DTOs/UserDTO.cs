@@ -16,10 +16,12 @@ namespace PlaceHolder.DTOs
 
         [Required(ErrorMessage = "Password is required")]
         [MinLength(8, ErrorMessage = "Password must have minimum of {1} characters")]
-        [MaxLength(20, ErrorMessage = "Password must have maximum of {1} characters")]
+        [MaxLength(40, ErrorMessage = "Password must have maximum of {1} characters")]
+        [RegularExpression("(?=.*[0,9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,40}", 
+            ErrorMessage = "Password must contain uppercase, lowercase, special character, number and at least 8 characters")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "E-mail is required")]
         [EmailUnique(ErrorMessage ="E-mail already used")]
         public string Email { get; set; }
         public UserDTO()

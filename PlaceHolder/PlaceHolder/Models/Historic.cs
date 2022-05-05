@@ -6,20 +6,25 @@ namespace PlaceHolder.Models
     [Table("historical")]
     public class Historic : BaseEntity
     {
-
         [StringLength(50)]
-        public string text { get; set; }
+        public string CreateBy { get; set; }
+
+        [StringLength(200)]
+        public string Text { get; set; }
+
         public DateTime CreationDate { get; set; }
 
         [JsonIgnore]
         public Ticket Ticket { get; set; }
+
         public long TicketId { get; set; }
 
         public Historic() { }
 
-        public Historic(string text, DateTime creationDate, Ticket ticket, long ticketId)
+        public Historic(string createBy, string text, DateTime creationDate, Ticket ticket, long ticketId)
         {
-            this.text = text;
+            CreateBy = createBy;
+            this.Text = text;
             CreationDate = creationDate;
             Ticket = ticket;
             TicketId = ticketId;

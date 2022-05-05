@@ -41,7 +41,7 @@ namespace PlaceHolder.Services.Implamentations
 
         public Ticket? FindByID(long id)
         {
-            return _repository.FindByID(id);
+            return _repository.FindByIDWithInclude(id);
         }
 
         public Ticket? Update(Ticket ticket)
