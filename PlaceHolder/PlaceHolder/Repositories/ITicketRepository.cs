@@ -2,20 +2,10 @@
 
 namespace PlaceHolder.Repositories.Implamentations
 {
-    public interface ITicketRepository
+    public interface ITicketRepository : IRepository<Ticket>
     {
-        Ticket? Create(Ticket ticket);
-
-        Ticket? Update(Ticket ticket);
-
-        void Delete(long id);
-
-        Ticket? FindByID(long id);
-
-        List<Ticket> FindAll();
-
-        Boolean IsExist(Ticket ticket);
-
         List<Ticket> FindAllByUserEmail(string email);
+
+        Ticket? FindByIDWithInclude(long id);
     }
 }

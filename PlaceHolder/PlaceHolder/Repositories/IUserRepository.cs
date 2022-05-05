@@ -1,21 +1,21 @@
 ﻿using PlaceHolder.DTOs;
+using System.Security.Cryptography;
 
 namespace PlaceHolder.Repositories.Implamentations
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        User? Create(User user);
-
-        User? Update(User user);
-
-        void Delete(long id);
-
-        User? FindByID(long id);
+        User? FindByEmailWithInclude(string email);
 
         User? FindByEmail(string email);
 
-        List<User> FindAll();
+        User? FindByIDWithInclude(long id);
 
-        Boolean IsExist(User user);
+        User? FindByCPF(string cpf);
+
+        User? ValidateCredencials(UserLoginDTO obj);
+
+        string EncryptPassword(string input, SHA512 algorithm);
+
     }
 }

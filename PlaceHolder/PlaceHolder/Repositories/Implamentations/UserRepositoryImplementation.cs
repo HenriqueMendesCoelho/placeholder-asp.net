@@ -1,89 +1,50 @@
-﻿using PlaceHolder.Repositories.Implamentations;
+﻿using PlaceHolder.DTOs;
+using PlaceHolder.Repositories.Generic;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PlaceHolder.Repositories
 {
-    public class UserRepositoryImplementation : IUserRepository
+    public class UserRepositoryImplementation : GenericRepository<User>, IUserRepository
     {
-        private readonly DataContext _context;
 
-        public UserRepositoryImplementation(DataContext context)
-        {
-            _context = context;
-        }
-        //Create user in the DB
-        public User? Create(User user)
-        {
-            if(user == null) return null;
-            try
-            {
-                _context.User.Add(user);
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                throw;
-            }           
-            return user;
-        }
-        //Delete user from the DB
-        public void Delete(long id)
-        {
-            var user = _context.User.SingleOrDefault(u => u.Id.Equals(id));
+        public UserRepositoryImplementation(DataContext Context) : base(Context) { }
 
-            if (user != null)
-            {
-                try
-                {
-                    _context.User.Remove(user);
-                    _context.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }
-        }
-        //List all Users
-        public List<User> FindAll()
+        public User? FindByCPF(string cpf)
         {
-            return _context.User.ToList();
+            return _context.User.SingleOrDefault(u => u.Cpf.Equals(cpf));
         }
-        //Search user with the email
+
         public User? FindByEmail(string email)
         {
-            return _context.User.Include(u => u.Ticket).ThenInclude(t => t.Historics).AsNoTracking().SingleOrDefault(u => u.Email.Equals(email));
+            return _context.User.SingleOrDefault(u => u.Email.Equals(email));
         }
-        //Search user with de id
-        public User? FindByID(long id)
+
+        //Search user with the email
+        public User? FindByEmailWithInclude(string email)
         {
-            return _context.User.Include(u => u.Ticket).ThenInclude(t => t.Historics).AsNoTracking().SingleOrDefault(u => u.Id.Equals(id));
+            return _context.User.Include(u => u.Ticket).ThenInclude(t => t.Historical).Include(u => u.Address).AsNoTracking().SingleOrDefault(u => u.Email.Equals(email));
         }
-        //Validation if a user exist
-        public bool IsExist(User user)
+
+        public User? FindByIDWithInclude(long id)
         {
-            return _context.User.Any(u => u.Email.Equals(user.Id));
+            return _context.User.Include(u => u.Ticket).ThenInclude(t => t.Historical).Include(u => u.Address).AsNoTracking().SingleOrDefault(u => u.Id.Equals(id));
         }
-        //Update the user
-        public User? Update(User user)
+
+        public User? ValidateCredencials(UserLoginDTO obj)
         {
-            if(!IsExist(user)) return null;
+            var pass = EncryptPassword(obj.Password, SHA512.Create());
 
-            var _user = _context.User.SingleOrDefault(u => u.Id.Equals(user.Id));
+            User user = _context.User.FirstOrDefault(u => u.Email.Equals(obj.Email) && u.Password.Equals(pass));
 
-            if(_user != null)
-            {
-                try
-                {
-                    _context.Entry(_user).CurrentValues.SetValues(user);
-                    _context.SaveChanges();
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
             return user;
+        }
+
+        public string EncryptPassword(string input, SHA512 algorithm)
+        {
+            Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+            return BitConverter.ToString(hashedBytes);
         }
     }
 }

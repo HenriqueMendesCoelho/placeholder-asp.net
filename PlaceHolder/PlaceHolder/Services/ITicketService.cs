@@ -4,7 +4,7 @@ namespace PlaceHolder.Services
 {
     public interface ITicketService
     {
-        Ticket? CreateByUser(TicketCreateUserDTO ticket);
+        Ticket? CreateTicketByUser(TicketCreateByUserDTO ticket, User user);
 
         Ticket? Update(Ticket ticket);
 

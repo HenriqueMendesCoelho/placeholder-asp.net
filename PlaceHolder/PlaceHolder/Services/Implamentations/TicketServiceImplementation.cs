@@ -5,18 +5,23 @@ namespace PlaceHolder.Services.Implamentations
     public class TicketServiceImplementation : ITicketService
     {
         private readonly ITicketRepository _repository;
+        private IUserService _userService;
 
-        public TicketServiceImplementation(ITicketRepository repository)
+        public TicketServiceImplementation(ITicketRepository repository, IUserService userService)
         {
             _repository = repository;
+            _userService = userService;
         }
 
-        public Ticket? CreateByUser(TicketCreateUserDTO ticket)
+        public Ticket? CreateTicketByUser(TicketCreateByUserDTO obj, User user)
         {
-            Ticket _ticket = convertTicketUserDTO(ticket);
-            _ticket.Status = "Aberto";
-            
-            return _repository.Create(_ticket);
+            Ticket ticket = convertTicketUserDTO(obj, user);
+            ticket.Status = Status.StatusEnum.ABERTO;
+            ticket.CreationDate = DateTime.Now;
+
+            _repository.Create(ticket);
+
+            return ticket;
         }
 
         public void Delete(long id)
@@ -36,7 +41,7 @@ namespace PlaceHolder.Services.Implamentations
 
         public Ticket? FindByID(long id)
         {
-            return _repository.FindByID(id);
+            return _repository.FindByIDWithInclude(id);
         }
 
         public Ticket? Update(Ticket ticket)
@@ -44,20 +49,21 @@ namespace PlaceHolder.Services.Implamentations
             return _repository.Update(ticket);
         }
 
-        private Ticket convertTicketUserDTO(TicketCreateUserDTO obj)
+        public Ticket? UpdateByEmployee(Ticket ticket)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Ticket convertTicketUserDTO(TicketCreateByUserDTO obj, User user)
         {
             return new Ticket()
             {
                 Description = obj.Description,
                 Category = obj.Category,
                 SubCategory = obj.SubCategory,
-                Title = obj.Title
+                Title = obj.Title,
+                UserId = user.Id,
             };
-        }
-
-        public Ticket? UpdateByEmployee(Ticket ticket)
-        {
-            throw new NotImplementedException();
         }
     }
 }

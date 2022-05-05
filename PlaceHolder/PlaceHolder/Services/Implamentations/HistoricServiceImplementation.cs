@@ -2,34 +2,39 @@
 {
     public class HistoricServiceImplementation : IHistoricService
     {
-        public Ticket Create(Ticket user)
+
+        private readonly IRepository<Historic> _repository;
+
+        public HistoricServiceImplementation(IRepository<Historic> repository)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+        }
+
+        public Historic Create(Historic historic)
+        {
+            _repository.Create(historic);
+
+            return historic;
         }
 
         public void Delete(long id)
         {
-            throw new NotImplementedException();
+            _repository.Delete(id);
         }
 
-        public List<Ticket> FindAll()
+        public List<Historic> FindAll()
         {
-            throw new NotImplementedException();
+            return _repository.FindAll();
         }
 
-        public Ticket FindyByEmail(string email)
+        public Historic? FindByID(long id)
         {
-            throw new NotImplementedException();
+            return _repository.FindByID(id);
         }
 
-        public Ticket FindyByID(long id)
+        public Historic? Update(Historic Historic)
         {
-            throw new NotImplementedException();
-        }
-
-        public Ticket Update(User user)
-        {
-            throw new NotImplementedException();
+            return _repository.Update(Historic);
         }
     }
 }

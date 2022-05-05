@@ -2,16 +2,14 @@
 {
     public interface IHistoricService
     {
-        Ticket Create(Ticket user);
+        Historic Create(Historic historic);
 
-        Ticket Update(User user);
+        Historic? Update(Historic Historic);
 
         void Delete(long id);
 
-        Ticket FindyByID(long id);
+        Historic? FindByID(long id);
 
-        Ticket FindyByEmail(string email);
-
-        List<Ticket> FindAll();
+        List<Historic> FindAll();
     }
 }

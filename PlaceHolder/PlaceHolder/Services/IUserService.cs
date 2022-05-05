@@ -15,5 +15,9 @@ namespace PlaceHolder.Services.Implamentations
         User? FindByEmail(string email);
 
         List<User> FindAll();
+
+        bool ValidateCredencials(string Email, string Password);
+
+        string EncryptPassword(string input);
     }
 }

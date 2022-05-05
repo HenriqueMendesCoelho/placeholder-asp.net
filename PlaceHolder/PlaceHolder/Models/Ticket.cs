@@ -1,47 +1,57 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using PlaceHolder.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlaceHolder.Models
 {
-    [Table("ticket")]
-    public class Ticket
+    [Table("tickets")]
+    public class Ticket : BaseEntity
     {
-        public long Id { get; set; }
         public string Description { get; set; }
+
         [StringLength(30)]
-        public string Category { get; set; }
+        public string? Category { get; set; }
+
         [StringLength(30)]
-        public string SubCategory { get; set; }
-        [StringLength(30)]
-        public string Status { get; set; }
+        public string? SubCategory { get; set; }
+
         [StringLength(50)]
-        public string Responsible { get; set; }
+        public string? Responsible { get; set; }
+
         [StringLength(50)]
-        public string Employee { get; set; }
+        public string? Employee { get; set; }
+
         [StringLength(50)]
         public string Title { get; set; }
+
+        public DateTime? CreationDate { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Status.StatusEnum Status { get; set; }
+
         [JsonIgnore]
         public User User { get; set; }
+
         public long UserId { get; set; }
-        public List<Historic> Historics { get; set; }
 
-        public Ticket()
-        {
+        public List<Historic>? Historical { get; set; }
 
-        }
-        public Ticket(string description, string category, 
-            string subCategory, string status, string responsible, 
-            string employee, string title, User user, long userId, List<Historic> historics)
+        public Ticket() { }
+
+        public Ticket(string description, string? category, string? subCategory, 
+            string? responsible, string? employee, string title, DateTime? creationDate, 
+            Status.StatusEnum status, User user, long userId, List<Historic>? historical)
         {
             Description = description;
             Category = category;
             SubCategory = subCategory;
-            Status = status;
             Responsible = responsible;
             Employee = employee;
             Title = title;
+            CreationDate = creationDate;
+            Status = status;
             User = user;
             UserId = userId;
-            Historics = historics;
+            Historical = historical;
         }
     }
 }
