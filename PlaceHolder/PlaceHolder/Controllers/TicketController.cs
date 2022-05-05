@@ -39,7 +39,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             Ticket ticket = _ticketService.FindByID(id);
 
@@ -91,7 +91,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             Ticket ticket = _ticketService.FindByID(id);
 
@@ -141,7 +141,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             if (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)) return StatusCode(StatusCodes.Status406NotAcceptable, 
                 new JsonReturnStandard().SingleReturnJsonError("The ticker cannot be transferred to itself"));
@@ -192,7 +192,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             var search = _ticketService.FindByID(obj.Id);
             if(search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Ticket not found"));
@@ -237,7 +237,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid("Forbidden");
 
             Ticket ticket = _ticketService.FindByID(id);
 

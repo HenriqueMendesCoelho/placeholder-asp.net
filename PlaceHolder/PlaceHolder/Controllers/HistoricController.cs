@@ -45,7 +45,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             Ticket ticket = _ticketService.FindByID(ticketId);
             if(ticket == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Ticket not found"));
@@ -63,6 +63,41 @@ namespace PlaceHolder.Controllers
             {
                 _service.Create(historic);
                 return Ok(new JsonReturnStandard().SingleReturnJson("Historic created"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return Problem("An error ocurred contact administrator");
+            }
+        }
+
+        /// <summary>
+        /// Delete Ticket historic - ADM only
+        /// </summary>
+        [HttpDelete("v1/{historicId}/adm")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult DeleteHistoric(long id)
+        {
+            //Getting user by jwt bearer token
+            ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
+            User user = _userService.FindByEmail(principal.Identity.Name);
+
+            //Validation if user is admin or employee
+            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid("Forbidden");
+
+            if (id <= 0) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("Invalid id"));
+
+            Historic obj = _service.FindByID(id);
+            if (obj == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Historic not found"));
+
+            try
+            {
+                _service.Delete(id);
+                return Ok(new JsonReturnStandard().SingleReturnJson("Historic deleted"));
             }
             catch (Exception ex)
             {

@@ -41,7 +41,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             User search = _userService.FindByID(id);
             if (search == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
@@ -63,7 +63,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin or employee
-            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN && user.profile != Profiles.ProfilesEnum.EMPLOYEE) return Forbid("Forbidden");
 
             return _userService.FindAll();
         }
@@ -116,7 +116,7 @@ namespace PlaceHolder.Controllers
             User user = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin
-            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+            if (user.profile != Profiles.ProfilesEnum.ADMIN) return Forbid("Forbidden");
 
             if (email == null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("Email can't be null"));
 
@@ -154,7 +154,7 @@ namespace PlaceHolder.Controllers
             User userLoged = _userService.FindByEmail(principal.Identity.Name);
 
             //Validation if user is admin
-            if (userLoged.profile != Profiles.ProfilesEnum.ADMIN) return Forbid();
+            if (userLoged.profile != Profiles.ProfilesEnum.ADMIN) return Forbid("Forbidden");
 
             User user = _userService.FindByID(id);
 
@@ -204,7 +204,7 @@ namespace PlaceHolder.Controllers
         /// Password regex > (?=.*[0,9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,40}
         /// </remarks>
         [HttpPatch("v1/change")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(500)]
