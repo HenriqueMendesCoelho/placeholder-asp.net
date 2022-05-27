@@ -20,9 +20,9 @@ namespace PlaceHolder.Migrations
                     cpf = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
                     password = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    backup_email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     refresh_token = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     refresh_token_expiry_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     profile = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -42,6 +42,7 @@ namespace PlaceHolder.Migrations
                     Responsible = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Employee = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Severity = table.Column<int>(type: "integer", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false)
@@ -66,8 +67,9 @@ namespace PlaceHolder.Migrations
                     City = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     State = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false),
-                    Complement = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Cep = table.Column<int>(type: "integer", nullable: false)
+                    Complement = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    District = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Cep = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,7 +88,8 @@ namespace PlaceHolder.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    text = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreateBy = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Text = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TicketId = table.Column<long>(type: "bigint", nullable: false)
                 },

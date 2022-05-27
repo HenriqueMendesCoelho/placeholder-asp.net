@@ -23,8 +23,7 @@ namespace PlaceHolder.Models
         [StringLength(50)]
         public string Title { get; set; }
 
-        [StringLength(50)]
-        public string Severity { get; set; }
+        public int Severity { get; set; }
 
         public DateTime? CreationDate { get; set; }
 
@@ -40,9 +39,7 @@ namespace PlaceHolder.Models
 
         public Ticket() { }
 
-        public Ticket(string description, string? category, string? subCategory, string? responsible, 
-            string? employee, string title, string severity, DateTime? creationDate, Status.StatusEnum status, 
-            User user, long userId, List<Historic>? historical)
+        public Ticket(string description, string? category, string? subCategory, string? responsible, string? employee, string title, int severity, DateTime? creationDate, Status.StatusEnum status, User user, long userId, List<Historic>? historical)
         {
             Description = description;
             Category = category;

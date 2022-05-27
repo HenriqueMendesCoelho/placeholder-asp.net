@@ -82,10 +82,8 @@ namespace PlaceHolder.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Severity")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()

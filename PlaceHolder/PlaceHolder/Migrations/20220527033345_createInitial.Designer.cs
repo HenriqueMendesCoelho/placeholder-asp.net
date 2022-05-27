@@ -12,8 +12,8 @@ using PlaceHolder.Data;
 namespace PlaceHolder.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220503105427_attTableHistorical")]
-    partial class attTableHistorical
+    [Migration("20220527033345_createInitial")]
+    partial class createInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,6 +83,9 @@ namespace PlaceHolder.Migrations
                     b.Property<string>("Responsible")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()
