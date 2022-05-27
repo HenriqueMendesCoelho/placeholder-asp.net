@@ -18,6 +18,10 @@
         [MaxLength(50, ErrorMessage = "Title must have maximum of {1} characters")]
         public string Title { get; set; }
 
+        [Required(ErrorMessage = "Severity is required")]
+        [MaxLength(50, ErrorMessage = "Severity must have maximum of {1} characters")]
+        public string Severity { get; set; }
+
         public TicketCreateByUserDTO()
         {
 

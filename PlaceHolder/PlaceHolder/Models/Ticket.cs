@@ -23,6 +23,9 @@ namespace PlaceHolder.Models
         [StringLength(50)]
         public string Title { get; set; }
 
+        [StringLength(50)]
+        public string Severity { get; set; }
+
         public DateTime? CreationDate { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -37,9 +40,9 @@ namespace PlaceHolder.Models
 
         public Ticket() { }
 
-        public Ticket(string description, string? category, string? subCategory, 
-            string? responsible, string? employee, string title, DateTime? creationDate, 
-            Status.StatusEnum status, User user, long userId, List<Historic>? historical)
+        public Ticket(string description, string? category, string? subCategory, string? responsible, 
+            string? employee, string title, string severity, DateTime? creationDate, Status.StatusEnum status, 
+            User user, long userId, List<Historic>? historical)
         {
             Description = description;
             Category = category;
@@ -47,6 +50,7 @@ namespace PlaceHolder.Models
             Responsible = responsible;
             Employee = employee;
             Title = title;
+            Severity = severity;
             CreationDate = creationDate;
             Status = status;
             User = user;
