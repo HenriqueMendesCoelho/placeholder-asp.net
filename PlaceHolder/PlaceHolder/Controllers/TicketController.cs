@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using PlaceHolder.DTOs;
+using PlaceHolder.Exceptions;
 using PlaceHolder.Methods;
 using PlaceHolder.Security;
 using System.Security.Claims;
@@ -65,6 +66,11 @@ namespace PlaceHolder.Controllers
             try
             {
                 ticket = _ticketService.CreateTicketByUser(obj, user);
+            }
+            catch (ApiInternalException e)
+            {
+                _logger.LogError(e.ToString());
+                return BadRequest(new JsonReturnStandard().SingleReturnJsonError(e.Message));
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 ﻿using PlaceHolder.DTOs;
+using PlaceHolder.Exceptions;
 
 namespace PlaceHolder.Services.Implamentations
 {
@@ -15,6 +16,11 @@ namespace PlaceHolder.Services.Implamentations
 
         public Ticket? CreateTicketByUser(TicketCreateByUserDTO obj, User user)
         {
+
+            List<string> category = new List<string> { "Teste", "Teste2" };
+
+            if (category.Contains("Teste")) throw new ApiInternalException("Categoria não encontrada");
+
             Ticket ticket = convertTicketUserDTO(obj, user);
             ticket.Status = Status.StatusEnum.ABERTO;
             ticket.CreationDate = DateTime.Now;

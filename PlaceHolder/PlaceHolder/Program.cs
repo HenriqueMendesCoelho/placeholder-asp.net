@@ -120,8 +120,7 @@ builder.Services.AddAuthorization(auth =>
 
 #region [HerokuDBEnv]
 var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-if(!string.IsNullOrEmpty(connectionUrl))
+if (!string.IsNullOrEmpty(connectionUrl))
 {
     var databaseUri = new Uri(connectionUrl);
 
@@ -131,10 +130,11 @@ if(!string.IsNullOrEmpty(connectionUrl))
     connectionUrl = $"User Id={userInfo[0]};Password={userInfo[1]};Server={databaseUri.Host};Port={databaseUri.Port};Database={db};";
 } else
 {
-    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+    //connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+    connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL_LOCAL");
 }
 
-Console.WriteLine("URL_DB>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+connectionUrl);
+Console.WriteLine(connectionUrl);
 #endregion
 
 #region [DBContext]
