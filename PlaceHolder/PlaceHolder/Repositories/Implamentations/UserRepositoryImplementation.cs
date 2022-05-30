@@ -26,13 +26,15 @@ namespace PlaceHolder.Repositories
             return _context.User
                 .Include(u => u.Ticket).ThenInclude(t => t.Historical)
                 .Include(u => u.Ticket).ThenInclude(t => t.Address)
-                .Include(u => u.Address).AsNoTracking().SingleOrDefault(u => u.Email.Equals(email));
+                .Include(u => u.Address)
+                .AsNoTracking().SingleOrDefault(u => u.Email.Equals(email));
         }
 
         public User? FindByIDWithInclude(long id)
         {
             return _context.User
                 .Include(u => u.Ticket).ThenInclude(t => t.Historical)
+                .Include(u => u.Ticket).ThenInclude(t => t.Address)
                 .Include(u => u.Address)
                 .AsNoTracking().SingleOrDefault(u => u.Id.Equals(id));
         }
