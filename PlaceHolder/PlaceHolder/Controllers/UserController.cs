@@ -194,7 +194,10 @@ namespace PlaceHolder.Controllers
         public User? SearchUserLogged()
         {
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
-            return _userService.FindByEmail(principal.Identity.Name);
+
+            User user = _userService.FindByEmail(principal.Identity.Name);
+            user.Password = "#####";
+            return user;
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace PlaceHolder.Integrations.ViaCEP
             _logger = logger;
         }
 
-        public async Task<ViaCEPResponse?> ValidationCEP(string cep)
+        private async Task<ViaCEPResponse> ValidateCEPCallViaCEP(string cep)
         {
             string Url = $"https://viacep.com.br/ws/{ cep }/json/";
 
@@ -26,7 +26,6 @@ namespace PlaceHolder.Integrations.ViaCEP
                 if(response.IsSuccessStatusCode)
                 {
                     ViaCEPResponse responseModel = await response.Content.ReadFromJsonAsync<ViaCEPResponse>();
-                    if(responseModel.Cep == null) return null;
 
                     return responseModel;
                 } else
@@ -34,6 +33,13 @@ namespace PlaceHolder.Integrations.ViaCEP
                     throw new ApiInternalException(response.ReasonPhrase);
                 }
             }
+        }
+
+        public ViaCEPResponse ValidateCEPWrap(string cep)
+        {
+            var result = ValidateCEPCallViaCEP(cep);
+
+            return (result.Result.Cep != null) ? result.Result : throw new CepNotFoundException();
         }
     }
 }

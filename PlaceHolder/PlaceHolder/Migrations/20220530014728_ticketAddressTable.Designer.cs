@@ -12,8 +12,8 @@ using PlaceHolder.Data;
 namespace PlaceHolder.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220503105427_attTableHistorical")]
-    partial class attTableHistorical
+    [Migration("20220530014728_ticketAddressTable")]
+    partial class ticketAddressTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,7 @@ namespace PlaceHolder.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
@@ -84,11 +85,15 @@ namespace PlaceHolder.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SubCategory")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
@@ -105,6 +110,49 @@ namespace PlaceHolder.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("tickets");
+                });
+
+            modelBuilder.Entity("PlaceHolder.Models.TicketAddress", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ticket_id");
+
+                    b.Property<string>("Cep")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Complement")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ticket_address");
                 });
 
             modelBuilder.Entity("PlaceHolder.Models.User", b =>
@@ -231,6 +279,17 @@ namespace PlaceHolder.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PlaceHolder.Models.TicketAddress", b =>
+                {
+                    b.HasOne("PlaceHolder.Models.Ticket", "Ticket")
+                        .WithOne("Address")
+                        .HasForeignKey("PlaceHolder.Models.TicketAddress", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("PlaceHolder.Models.UserAddress", b =>
                 {
                     b.HasOne("PlaceHolder.Models.User", "User")
@@ -244,6 +303,9 @@ namespace PlaceHolder.Migrations
 
             modelBuilder.Entity("PlaceHolder.Models.Ticket", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Historical");
                 });
 

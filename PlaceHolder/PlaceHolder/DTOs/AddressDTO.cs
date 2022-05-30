@@ -1,6 +1,6 @@
 ﻿namespace PlaceHolder.DTOs
 {
-    public class UserAddressDTO
+    public class AddressDTO
     {
         [Required(ErrorMessage = "Street is required")]
         [MaxLength(50, ErrorMessage = "Street must have maximum of {1} characters")]
@@ -14,8 +14,8 @@
         [MaxLength(2, ErrorMessage = "State must have maximum of {1} characters")]
         public string State { get; set; }
 
-        [Required(ErrorMessage = "State is required")]
-        [MaxLength(2, ErrorMessage = "State must have maximum of {1} characters")]
+        [Required(ErrorMessage = "District is required")]
+        [MaxLength(50, ErrorMessage = "District must have maximum of {1} characters")]
         public string District { get; set; }
 
         [Range(1, 10000000, ErrorMessage = "Value for number must be between {1} and {2}")]

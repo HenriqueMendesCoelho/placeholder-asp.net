@@ -36,6 +36,7 @@ builder.Services.AddScoped<IHistoricService, HistoricServiceImplementation>();
 builder.Services.AddScoped<IUserAddressService, UserAddressImplementation>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthServiceImplementation>();
+builder.Services.AddScoped<ITicketAddressService, TicketAddressImplementation>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -120,8 +121,7 @@ builder.Services.AddAuthorization(auth =>
 
 #region [HerokuDBEnv]
 var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-if(!string.IsNullOrEmpty(connectionUrl))
+if (!string.IsNullOrEmpty(connectionUrl))
 {
     var databaseUri = new Uri(connectionUrl);
 
@@ -131,10 +131,9 @@ if(!string.IsNullOrEmpty(connectionUrl))
     connectionUrl = $"User Id={userInfo[0]};Password={userInfo[1]};Server={databaseUri.Host};Port={databaseUri.Port};Database={db};";
 } else
 {
-    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+    //connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
+    connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL_LOCAL");
 }
-
-Console.WriteLine("URL_DB>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+connectionUrl);
 #endregion
 
 #region [DBContext]

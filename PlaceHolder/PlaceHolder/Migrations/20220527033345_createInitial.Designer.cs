@@ -12,8 +12,8 @@ using PlaceHolder.Data;
 namespace PlaceHolder.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220424040156_CreationDateUser")]
-    partial class CreationDateUser
+    [Migration("20220527033345_createInitial")]
+    partial class createInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,16 +33,21 @@ namespace PlaceHolder.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("TicketId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("text")
+                    b.Property<string>("CreateBy")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<long>("TicketId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -79,6 +84,9 @@ namespace PlaceHolder.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
@@ -110,12 +118,6 @@ namespace PlaceHolder.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("BackupEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("backup_email");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
@@ -173,8 +175,10 @@ namespace PlaceHolder.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("Cep")
-                        .HasColumnType("integer");
+                    b.Property<string>("Cep")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -182,6 +186,10 @@ namespace PlaceHolder.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<string>("Complement")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("District")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
