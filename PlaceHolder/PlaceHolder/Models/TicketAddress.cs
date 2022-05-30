@@ -6,6 +6,7 @@ namespace PlaceHolder.Models
     [Table("ticket_address")]
     public class TicketAddress : BaseEntity
     {
+        [JsonIgnore]
         [ForeignKey("Ticket")]
         [Column("ticket_id")]
         override

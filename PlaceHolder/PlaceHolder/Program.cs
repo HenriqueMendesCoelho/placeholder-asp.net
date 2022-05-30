@@ -36,6 +36,7 @@ builder.Services.AddScoped<IHistoricService, HistoricServiceImplementation>();
 builder.Services.AddScoped<IUserAddressService, UserAddressImplementation>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthServiceImplementation>();
+builder.Services.AddScoped<ITicketAddressService, TicketAddressImplementation>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -133,8 +134,6 @@ if (!string.IsNullOrEmpty(connectionUrl))
     //connectionUrl = builder.Configuration.GetConnectionString("DefaultConnection");
     connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL_LOCAL");
 }
-
-Console.WriteLine(connectionUrl);
 #endregion
 
 #region [DBContext]

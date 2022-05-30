@@ -1,4 +1,7 @@
-﻿namespace PlaceHolder.Services
+﻿using PlaceHolder.DTOs;
+using PlaceHolder.Integrations.ViaCEP.Model;
+
+namespace PlaceHolder.Services
 {
     public interface IUserAddressService
     {
@@ -11,5 +14,7 @@
         UserAddress? FindByID(long id);
 
         List<UserAddress> FindAll();
+
+        public UserAddress ExtractAddresFromDTO(AddressDTO obj, long id, ViaCEPResponse viaCEP);
     }
 }

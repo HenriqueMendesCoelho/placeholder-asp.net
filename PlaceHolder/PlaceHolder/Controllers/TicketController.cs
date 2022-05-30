@@ -56,7 +56,7 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(200, Type = typeof(Ticket))]
         [ProducesResponseType(401)]
         [ProducesResponseType(500)]
-        public ActionResult<Ticket> CreateTicketUserNonADM(TicketCreateByUserDTO obj)
+        public ActionResult<Ticket?> CreateTicketUserNonADM(TicketCreateByUserDTO obj)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
@@ -65,19 +65,24 @@ namespace PlaceHolder.Controllers
 
             try
             {
-                ticket = _ticketService.CreateTicketByUser(obj, user);
+                return _ticketService.CreateTicketByUser(obj, user);
             }
             catch (ApiInternalException e)
             {
-                _logger.LogError(e.ToString());
+                _logger.LogError(e.Message);
                 return BadRequest(new JsonReturnStandard().SingleReturnJsonError(e.Message));
+            }
+            catch (CepNotFoundException e)
+            {
+                //System.Diagnostics.Trace.WriteLine("CepNotFoundException");
+                //throw;
+                return NotFound(new JsonReturnStandard().SingleReturnJsonError(e.Message));
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
                 return Problem("An error ocurred contact administrator");
             }
-            return (ticket != null) ? Ok(ticket) : Problem("An error ocurred contact administrator");
         }
 
         /// <summary>

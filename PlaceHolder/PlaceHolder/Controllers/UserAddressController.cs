@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using PlaceHolder.DTOs;
+using PlaceHolder.Exceptions;
 using PlaceHolder.Integrations.ViaCEP;
 using PlaceHolder.Integrations.ViaCEP.Model;
 using PlaceHolder.Methods;
@@ -46,11 +47,15 @@ namespace PlaceHolder.Controllers
             if (userLoged == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("User not found"));
             if (userLoged.Address != null) return BadRequest(new JsonReturnStandard().SingleReturnJsonError("User already contains a Address"));
 
-            ViaCEPIntegration viaCEP = new();
-            Task<ViaCEPResponse> response;
+            ViaCEPResponse response;
             try
             {
-                response = viaCEP.ValidationCEP(Convert.ToString(obj.Cep));
+                ViaCEPIntegration viaCEP = new();
+                response = viaCEP.ValidateCEPWrap(Convert.ToString(obj.Cep));
+            }
+            catch (CepNotFoundException e)
+            {
+                return NotFound(new JsonReturnStandard().SingleReturnJsonError(e.Message));
             }
             catch (Exception ex)
             {
@@ -58,18 +63,7 @@ namespace PlaceHolder.Controllers
                 return Problem("An error ocurred contact administrator");
             }
 
-            if (response.Result == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("CEP not found"));
-
-            UserAddress userAddress = new();
-
-            userAddress.Cep = response.Result.Cep.Replace("-", "");
-            userAddress.State = (!string.IsNullOrEmpty(response.Result.Uf)) ? response.Result.Uf : obj.State;
-            userAddress.City = (!string.IsNullOrEmpty(response.Result.Localidade)) ? response.Result.Localidade : obj.City;
-            userAddress.District = (!string.IsNullOrEmpty(response.Result.Bairro)) ? response.Result.Bairro : obj.District;
-            userAddress.Street = (!string.IsNullOrEmpty(response.Result.Logradouro)) ? response.Result.Logradouro : obj.Street;
-            userAddress.Complement = obj.Complement;
-            userAddress.Id = userLoged.Id;
-            userAddress.Number = obj.Number;
+            UserAddress userAddress = _service.ExtractAddresFromDTO(obj, userLoged.Id, response);
 
             try
             {
@@ -105,32 +99,29 @@ namespace PlaceHolder.Controllers
             if (userAddress == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("Address of the user logged not found"));
 
             ViaCEPIntegration viaCEP = new();
-            Task<ViaCEPResponse> response;
-
+            ViaCEPResponse response;
+            
             try
             {
-                response = viaCEP.ValidationCEP(Convert.ToString(obj.Cep));
+                response = viaCEP.ValidateCEPWrap(Convert.ToString(obj.Cep));
             }
-            catch (Exception ex)
+            catch (CepNotFoundException e)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError(e.ToString());
+                return NotFound(new JsonReturnStandard().SingleReturnJsonError(e.Message));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
                 return Problem("An error ocurred contact administrator");
             }
 
-            if(response.Result == null) return NotFound(new JsonReturnStandard().SingleReturnJsonError("CEP not found"));
-
-            userAddress.Cep = response.Result.Cep.Replace("-", "");
-            userAddress.State = (!string.IsNullOrEmpty(response.Result.Uf)) ? response.Result.Uf : obj.State;
-            userAddress.City = (!string.IsNullOrEmpty(response.Result.Localidade)) ? response.Result.Localidade : obj.City;
-            userAddress.District = (!string.IsNullOrEmpty(response.Result.Bairro)) ? response.Result.Bairro : obj.District;
-            userAddress.Street = (!string.IsNullOrEmpty(response.Result.Logradouro)) ? response.Result.Logradouro : obj.Street;
-            userAddress.Complement = obj.Complement;
-            userAddress.Number = obj.Number;
+            UserAddress userAddressNew = _service.ExtractAddresFromDTO(obj, userLoged.Id, response);
 
             try
             {
-                _service.Update(userAddress);
-                return Ok(userAddress);
+                _service.Update(userAddressNew);
+                return Ok(userAddressNew);
             }
             catch (Exception ex)
             {
