@@ -39,8 +39,6 @@ namespace PlaceHolder.Integrations.ViaCEP
         {
             var result = ValidateCEPCallViaCEP(cep);
 
-            //if(result.Result == null) throw new CepNotFoundException();
-
             return (result.Result.Cep != null) ? result.Result : throw new CepNotFoundException();
         }
     }
