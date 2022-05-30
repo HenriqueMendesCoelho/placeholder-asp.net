@@ -1,6 +1,6 @@
 ﻿namespace PlaceHolder.DTOs
 {
-    public class UserAddressDTO
+    public class AddressDTO
     {
         [Required(ErrorMessage = "Street is required")]
         [MaxLength(50, ErrorMessage = "Street must have maximum of {1} characters")]

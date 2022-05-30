@@ -37,7 +37,7 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public ActionResult CreateUserAddress(UserAddressDTO obj)
+        public ActionResult CreateUserAddress(AddressDTO obj)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));
@@ -94,7 +94,7 @@ namespace PlaceHolder.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public ActionResult UpdateUserAddress(UserAddressDTO obj)
+        public ActionResult UpdateUserAddress(AddressDTO obj)
         {
             //Getting user by jwt bearer token
             ClaimsPrincipal principal = _tokenService.GetPrincipal(HttpContext.Request.Headers["Authorization"].ToString().Substring(7));

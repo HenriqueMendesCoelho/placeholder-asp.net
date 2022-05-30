@@ -17,9 +17,9 @@ namespace PlaceHolder.Services.Implamentations
         public Ticket? CreateTicketByUser(TicketCreateByUserDTO obj, User user)
         {
 
-            List<string> category = new List<string> { "Teste", "Teste2" };
+            //List<string> category = new List<string> { "Teste", "Teste2" };
 
-            if (category.Contains("Teste")) throw new ApiInternalException("Categoria não encontrada");
+            //if (category.Contains("Teste")) throw new ApiInternalException("Categoria não encontrada");
 
             Ticket ticket = convertTicketUserDTO(obj, user);
             ticket.Status = Status.StatusEnum.ABERTO;
