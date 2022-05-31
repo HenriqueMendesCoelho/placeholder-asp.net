@@ -59,11 +59,6 @@ namespace PlaceHolder.Services
         {
             List<User> users = _repository.FindAll();
 
-            foreach (User user in users)
-            {
-                user.Password = "*****";
-            }
-
             return users;
         }
 

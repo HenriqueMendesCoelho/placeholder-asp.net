@@ -197,7 +197,7 @@ namespace PlaceHolder.Controllers
 
             User user = _userService.FindByEmail(principal.Identity.Name);
             user.Password = "#####";
-            return user;
+            return _userService.FindByEmail(principal.Identity.Name);
         }
 
         /// <summary>
