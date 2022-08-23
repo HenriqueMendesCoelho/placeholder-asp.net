@@ -12,23 +12,30 @@ namespace PlaceHolder.Models
         override
         public long Id { get; set; }
 
+        [JsonPropertyOrder(2)]
         [StringLength(50)]
         public string Street { get; set; }
 
+        [JsonPropertyOrder(3)]
         [StringLength(20)]
         public string City { get; set; }
 
+        [JsonPropertyOrder(4)]
         [StringLength(2)]
         public string State { get; set; }
 
+        [JsonPropertyOrder(5)]
         public int Number { get; set; }
 
+        [JsonPropertyOrder(6)]
         [StringLength(50)]
         public string? Complement { get; set; }
 
+        [JsonPropertyOrder(7)]
         [StringLength(50)]
         public string District { get; set; }
 
+        [JsonPropertyOrder(8)]
         [StringLength(10)]
         public string Cep { get; set; }
 

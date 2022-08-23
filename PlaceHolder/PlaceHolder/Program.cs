@@ -90,7 +90,7 @@ builder.Services.AddSwaggerGen(options =>
 
 #region [JWT-Configuration]
 var token = builder.Configuration.GetSection("TokenConfiguratios").Get<TokenConfiguration>();
-token.Secret = Environment.GetEnvironmentVariable("SECRET_JWT");
+token.Secret = Environment.GetEnvironmentVariable("JWT_SECRET");
 
 builder.Services.AddSingleton(token);
 
