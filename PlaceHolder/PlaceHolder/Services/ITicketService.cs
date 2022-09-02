@@ -17,5 +17,7 @@ namespace PlaceHolder.Services
         List<Ticket> FindByUserEmail(string email);
 
         List<Ticket> FindAll();
+
+        List<Ticket> FindAllWithIncludes();
     }
 }

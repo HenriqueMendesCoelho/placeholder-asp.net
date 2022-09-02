@@ -6,6 +6,8 @@ namespace PlaceHolder.Repositories.Implamentations
     {
         List<Ticket> FindAllByUserEmail(string email);
 
+        List<Ticket> FindAllWithInclude();
+
         Ticket? FindByIDWithInclude(long id);
     }
 }

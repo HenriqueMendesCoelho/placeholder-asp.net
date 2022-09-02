@@ -98,5 +98,10 @@ namespace PlaceHolder.Services.Implamentations
                 Number = obj.Number
             };
         }
+
+        public List<Ticket> FindAllWithIncludes()
+        {
+            return _repository.FindAllWithInclude();
+        }
     }
 }

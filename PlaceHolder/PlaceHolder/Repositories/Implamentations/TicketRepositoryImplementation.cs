@@ -16,6 +16,14 @@ namespace PlaceHolder.Repositories.Implamentations
                 .AsNoTracking().ToList();
         }
 
+        public List<Ticket> FindAllWithInclude()
+        {
+            return _context.Ticket
+                .Include(t => t.Address)
+                .Include(t => t.Historical)
+                .ToList();
+        }
+
         public Ticket? FindByIDWithInclude(long id)
         {
             return _context.Ticket
