@@ -180,7 +180,7 @@ app.UseCors( c =>
 });
 #endregion
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

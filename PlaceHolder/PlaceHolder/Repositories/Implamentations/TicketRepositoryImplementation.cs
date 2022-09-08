@@ -13,6 +13,7 @@ namespace PlaceHolder.Repositories.Implamentations
                 .Where(t => t.User.Email.Equals(email))
                 .Include(t => t.Historical)
                 .Include(t => t.Address)
+                .Include(t => t.User)
                 .AsNoTracking().ToList();
         }
 
@@ -21,6 +22,7 @@ namespace PlaceHolder.Repositories.Implamentations
             return _context.Ticket
                 .Include(t => t.Address)
                 .Include(t => t.Historical)
+                .Include(t => t.User)
                 .ToList();
         }
 
@@ -29,6 +31,7 @@ namespace PlaceHolder.Repositories.Implamentations
             return _context.Ticket
                 .Include(t => t.Historical)
                 .Include(t => t.Address)
+                .Include(t => t.User)
                 .AsNoTracking().SingleOrDefault(t => t.Id.Equals(id));
         }
     }

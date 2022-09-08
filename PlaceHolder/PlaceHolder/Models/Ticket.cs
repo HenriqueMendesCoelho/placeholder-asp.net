@@ -45,15 +45,32 @@ namespace PlaceHolder.Models
         [JsonPropertyOrder(11)]
         public TicketAddress Address { get; set; }
 
-        [JsonIgnore]
+        [JsonPropertyOrder(12)]
         public long UserId { get; set; }
 
-        [JsonPropertyOrder(12)]
+        [JsonPropertyOrder(13)]
         public List<Historic>? Historical { get; set; }
 
-        public Ticket() { }
+        [NotMapped]
+        [JsonPropertyOrder(14)]
+        public string? CreatedBy
+        {
+            get
+            {
+                if (User != null)
+                {
+                    return User.FullName;
+                }
+                return null;
+            }
+        }
 
-        public Ticket(string description, string? category, string? subCategory, string? responsible, string? employee, string title, int severity, DateTime? creationDate, Status.StatusEnum status, User user, TicketAddress address, long userId, List<Historic>? historical)
+        public Ticket()
+        {
+
+        }
+
+        public Ticket(string description, string category, string subCategory, string? responsible, string? employee, string title, int severity, DateTime? creationDate, Status.StatusEnum status, User user, TicketAddress address, long userId, List<Historic>? historical)
         {
             Description = description;
             Category = category;

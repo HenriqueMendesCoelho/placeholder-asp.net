@@ -40,7 +40,9 @@ namespace PlaceHolder.Controllers
 
             TokenDTO token = _authService.RefreshToken(obj);
 
-            return (token != null) ? Ok(token) : Forbid("Invalid access token or refresh token");
+            return (token != null) ? Ok(token) : Unauthorized(new JsonReturnStandard()
+                    .SingleReturnJsonError("Invalid access token or refresh token"));
+            
         }
     }
 }
