@@ -4,18 +4,22 @@
     {
         public Dictionary<string, object> SingleReturnJson(string s)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
-            result.Add("success", true);
-            result.Add("Message", s);
+            Dictionary<string, object> result = new()
+            {
+                { "success", true },
+                { "message", s }
+            };
 
             return result;
         }
 
         public Dictionary<string, object> SingleReturnJsonError(string s)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
-            result.Add("success", false);
-            result.Add("Error", s);
+            Dictionary<string, object> result = new()
+            {
+                { "success", false },
+                { "error", s }
+            };
 
             return result;
         }

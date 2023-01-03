@@ -49,7 +49,7 @@ namespace PlaceHolder.Services.Implamentations
 
         public List<Ticket> FindAll()
         {
-            return _repository.FindAll();
+            return _repository.FindAllWithInclude();
         }
 
         public List<Ticket> FindByUserEmail(string email)
@@ -97,6 +97,11 @@ namespace PlaceHolder.Services.Implamentations
                 Id = id,
                 Number = obj.Number
             };
+        }
+
+        public List<Ticket> FindAllWithIncludes()
+        {
+            return _repository.FindAllWithInclude();
         }
     }
 }

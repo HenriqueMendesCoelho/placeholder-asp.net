@@ -50,6 +50,22 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
+        /// Get all ticket listed - Allow not loged 
+        /// </summary>
+        [HttpGet("v1/list")]
+        [ProducesResponseType(200, Type = typeof(List<Ticket>))]
+        [ProducesResponseType(204)]
+        [AllowAnonymous]
+        public ActionResult<List<Ticket>> GetList()
+        {
+            List<Ticket> ticket = _ticketService.FindAllWithIncludes();
+
+            if (ticket.Count == 0) return NoContent();
+
+            return ticket;
+        }
+
+        /// <summary>
         /// Create a ticket user NON ADM
         /// </summary>
         [HttpPost("v1")]

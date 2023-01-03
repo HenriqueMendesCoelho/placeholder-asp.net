@@ -37,7 +37,15 @@ namespace PlaceHolder.Controllers
             try
             {
                 ViaCEPIntegration viaCEPIntegration = new();
-                return Ok(viaCEPIntegration.ValidateCEPWrap(cep));
+                ViaCEPResponse viaCEP = viaCEPIntegration.ValidateCEPWrap(cep);
+
+                Dictionary<string, string> response = new Dictionary<string, string>();
+                response.Add("Cep", viaCEP.Cep);
+                response.Add("Street", viaCEP.Logradouro);
+                response.Add("District", viaCEP.Bairro);
+                response.Add("City", viaCEP.Localidade);
+                response.Add("State", viaCEP.Uf);
+                return Ok(response);
             }
             catch (CepNotFoundException e)
             {

@@ -69,7 +69,7 @@ namespace PlaceHolder.Controllers
         }
 
         /// <summary>
-        /// Create a user bearer token not required
+        /// Create a user - Allow not loged 
         /// </summary>
         /// <remarks>
         /// Password regex > (?=.*[0,9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,40} ||
@@ -197,7 +197,7 @@ namespace PlaceHolder.Controllers
 
             User user = _userService.FindByEmail(principal.Identity.Name);
             user.Password = "#####";
-            return user;
+            return _userService.FindByEmail(principal.Identity.Name);
         }
 
         /// <summary>

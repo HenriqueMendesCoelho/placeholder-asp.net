@@ -18,6 +18,16 @@
                     v => v.ToString(),
                     v => (Status.StatusEnum)Enum.Parse(typeof(Status.StatusEnum), v)
                 );
+
+            modelBuilder
+                .HasSequence<int>("Ticket_ID_Sq")
+                .StartsAt(2000)
+                .IncrementsBy(10);
+
+            modelBuilder
+                .Entity<Ticket>()
+                .Property(t => t.Id)
+                .HasDefaultValueSql("nextval('\"Ticket_ID_Sq\"')");
         }
     }
 }
