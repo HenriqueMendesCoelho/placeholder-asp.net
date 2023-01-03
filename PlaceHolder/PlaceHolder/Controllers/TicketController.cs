@@ -55,13 +55,12 @@ namespace PlaceHolder.Controllers
         [HttpGet("v1/list")]
         [ProducesResponseType(200, Type = typeof(List<Ticket>))]
         [ProducesResponseType(204)]
-        [ProducesResponseType(401)]
         [AllowAnonymous]
         public ActionResult<List<Ticket>> GetList()
         {
             List<Ticket> ticket = _ticketService.FindAllWithIncludes();
 
-            if (ticket == null) return NoContent();
+            if (ticket.Count == 0) return NoContent();
 
             return ticket;
         }

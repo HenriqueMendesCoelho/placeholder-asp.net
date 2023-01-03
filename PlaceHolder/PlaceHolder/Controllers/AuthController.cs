@@ -19,11 +19,14 @@ namespace PlaceHolder.Controllers
         /// Login generate JWT token
         /// </summary>
         [HttpPost("login")]
+        [ProducesResponseType(200, Type = typeof(TokenDTO))]
+        [ProducesResponseType(401)]
         public ActionResult<TokenDTO?> Login([FromBody] UserLoginDTO obj)
         {
             if(obj == null) return Unauthorized("Email or password incorrect");
 
             TokenDTO token = _authService.Login(obj);
+            Console.WriteLine("Ola");
 
             return (token != null) ? Ok(token) : Unauthorized("Email or password incorrect");
         }
@@ -32,6 +35,8 @@ namespace PlaceHolder.Controllers
         /// RefreshToken
         /// </summary>
         [HttpPost("refresh")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
         public ActionResult<TokenDTO?> RefreshToken(RefreshTokenDTO obj)
         {
             if (string.IsNullOrEmpty(obj.RefreshToken) || string.IsNullOrEmpty(obj.AccessToken)) 
